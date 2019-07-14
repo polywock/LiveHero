@@ -1,0 +1,39 @@
+@import "../global";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 15px;
+  background-color: $colorBg; 
+  color: $colorText; 
+  font-family: "OpenDyslexic";
+  // font-family: "Ubuntu";
+  font-size: 14px;
+  width: 375px;
+  user-select: none;
+}
+
+.button {
+  font-family: inherit;
+  font-size: inherit; 
+  padding: 3px 10px; 
+  // border-radius: 5px;
+  background-color: $colorFg; 
+  color: $colorText;
+  border: none; 
+  cursor: pointer;
+
+  &:focus {
+    outline: 1px solid $colorFocus; 
+  }
+
+  &:active {
+    background-color: darken($colorFg, 10%); 
+  }
+}
+
+
+

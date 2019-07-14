@@ -1,0 +1,22 @@
+@import "../global";
+
+.Checkbox {
+  display: inline-block;
+  background-color: #ddd; 
+  padding: 4px; 
+  // border-radius: 12px;
+
+  .inner {
+    // border-radius: 8px;
+    width: 20px;
+    height: 20px; 
+  }
+
+  &[data-checked=true] > .inner {
+    background-color: #ff4d4d; 
+  }
+
+  &:focus {
+    outline: 1px solid $colorFocus;
+  }
+}

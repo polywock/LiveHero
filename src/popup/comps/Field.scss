@@ -1,0 +1,60 @@
+@import "../global";
+
+.Field {
+  display: grid;
+  grid-template-columns: calc(50% - 5px) 50%; 
+  grid-column-gap: 5px; 
+  align-items: center;
+  position: relative;
+
+  .label {
+    // background-color: #ff000088;
+  }
+
+  .control {
+    background-color: #00ff0088;
+  }
+
+  .tooltip {
+    background-color: $colorFg; 
+    padding: 0px 6px; 
+    margin-left: 5px;
+    // border-radius: 3px;
+
+    &:focus {
+      outline: 1px solid $colorFocus;
+    }
+  }
+
+  .tooltip-bg {
+    position: fixed;
+    left: 0;
+    right: 0; 
+    top: 0;
+    bottom: 0;
+    background-color: #00000088;
+    z-index: 1000;
+  }
+
+  .tooltip-fg {
+    background-color: yellow;
+    color: black;
+    position: absolute;
+    left: 0;
+    bottom: 3em;
+    font-size: 0.9em;
+    padding: 3px;
+    // border-radius: 5px;
+    z-index: 1000;
+  }
+
+
+
+  .Checkbox {
+    justify-self: center;
+  }
+
+  .ColorPicker {
+    justify-self: center;
+  }
+}

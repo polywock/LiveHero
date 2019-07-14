@@ -1,0 +1,24 @@
+@import "../global";
+
+$colorBox: #ff4d4d;
+$colorText: #fff; 
+
+.Logo {
+  width: 150px;
+  display: block;
+
+  path {
+    fill: $colorText; 
+  }
+  rect {
+    fill: $colorBox;
+  }
+
+  &:hover rect {
+    fill: darken($colorBox, 5%);
+  }
+
+  &:hover path {
+    fill: darken($colorText, 5%);
+  }
+}

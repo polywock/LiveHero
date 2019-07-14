@@ -1,0 +1,43 @@
+{
+  "name": "riff",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:dev": "rm -rf build && webpack --config webpack.dev.js && cp popup.html build/unpacked/popup.html && cp manifest.json build/unpacked/manifest.json && cp assets/logo48.png build/unpacked/logo48.png && cp assets/logo128.png build/unpacked/logo128.png",
+    "build:prod": "rm -rf build && webpack --config webpack.prod.js && cp popup.html build/unpacked/popup.html && cp manifest.json build/unpacked/manifest.json && cp assets/logo48.png build/unpacked/logo48.png && cp assets/logo128.png build/unpacked/logo128.png && cd build/unpacked && zip -r ../packed.zip ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/chrome": "0.0.86",
+    "@types/react": "^16.8.17",
+    "@types/react-dom": "^16.8.4",
+    "babel-loader": "^8.0.6",
+    "pitchy": "^1.0.4",
+    "react": "^16.8.6",
+    "react-color": "^2.17.3",
+    "react-dom": "^16.8.6",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "css-loader": "^3.0.0",
+    "node-sass": "^4.12.0",
+    "regenerator-runtime": "^0.13.2",
+    "sass-loader": "^7.1.0",
+    "set-value": "^3.0.1",
+    "style-loader": "^0.23.1",
+    "use-methods": "^0.5.1",
+    "webextension-polyfill-ts": "^0.9.1",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.5"
+  }
+}

@@ -1,0 +1,10 @@
+@import "../global";
+
+.Channels {
+  display: grid;
+  grid-row-gap: 10px; 
+
+  & .add {
+    justify-self: left;
+  }
+}

@@ -1,0 +1,19 @@
+@import "../global";
+
+.KeyPicker {
+  padding: 5px; 
+  // border-radius: 5px;
+  background-color: $colorFg;
+  color: $colorText;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: 1px solid $colorFocus;
+  }
+
+  &:active {
+    background-color: darken($colorFg, 10%)
+  }
+}
