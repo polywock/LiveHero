@@ -44,6 +44,7 @@ export class Manager {
     this.wrapperDiv.div.id = "live-hero-div"
     const style = document.createElement("style")
     style.innerHTML = `
+      @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap');
       #live-hero-div {
         box-sizing: border-box; 
       }
@@ -158,10 +159,10 @@ export class Manager {
 
     if (this.config.showScore) {
       this.ctx.fillStyle = this.base.scoreSentiment === 0 ? "white" : this.base.scoreSentiment === -1 ? "#ffafaf" : "#afffaf"
-      this.ctx.font = "35px Jura"
+      this.ctx.font = "30px 'IBM Plex Mono'"
       this.ctx.textAlign = "left"
       this.ctx.textBaseline = "top"
-      this.ctx.fillText(this.base.score.toString(), 10, 10)
+      this.ctx.fillText(this.base.score.toString(), 15, 15)
     }
     this.drawNotes()
 
@@ -174,7 +175,7 @@ export class Manager {
       this.ctx.fillStyle = `rgba(0, 0, 0, 0.4)`
       this.ctx.fillRect(0, 0, 10000, 10000)
 
-      this.ctx.font = "50px Jura"
+      this.ctx.font = "50px 'IBM Plex Mono'"
       this.ctx.textAlign = "center"
       this.ctx.textBaseline = "middle"
       this.ctx.fillStyle = "white"
