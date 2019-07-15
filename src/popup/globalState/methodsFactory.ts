@@ -77,4 +77,6 @@ async function activate() {
   await browser.tabs.sendMessage(activeTab.id, {
     type: "TOGGLE_ON"
   })
+
+  window.close()
 }

@@ -38,7 +38,6 @@ export class Manager {
     const width = this.config.initialChannelWidth * this.config.channels.length
     this.wrapperDiv = new ScalableDiv((window.innerWidth - width) / 2, (window.innerHeight - 500) / 2, width, 500, CONSTANTS.MINIMUM_CHANNEL_WIDTH * this.config.channels.length, CONSTANTS.MINIMUM_HEIGHT, 35)
     this.wrapperDiv.div.setAttribute("tabindex", "1")
-    this.wrapperDiv.div.focus()
     this.wrapperDiv.div.id = "live-hero-div"
     const style = document.createElement("style")
     style.innerHTML = `
@@ -63,6 +62,7 @@ export class Manager {
     // attach to end of body 
     this.wrapperDiv.div.appendChild(this.canvas)
     document.body.appendChild(this.wrapperDiv.div)
+    this.wrapperDiv.div.focus()
 
     this.channels = this.config.channels.map((c, i) => new Channel(i, this))
     this.base.handleWon = idx => {
