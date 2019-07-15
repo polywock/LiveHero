@@ -1,6 +1,6 @@
 
 import { ScalableDiv } from "../ScalableDiv"
-import { Config } from "../popup/config"
+import { Config, getAdjustedNormal, getDynamicColor } from "../popup/config"
 import { Base, CONSTANTS as BASE_CONSTANTS } from "./Base"
 import * as helper from "../helper"
 import { setup as ctxSetup } from "../ctx"
@@ -10,7 +10,6 @@ ctxSetup()
 const CONSTANTS = {
   TAIL_WIDTH_SCALAR: 0.75,
   TAIL_FULFULL_NORMAL: 0.9,
-  ERROR_TRANSITION_RATE: -0.10,
   MINIMUM_CHANNEL_WIDTH: 35,
   MINIMUM_HEIGHT: 400
 }
@@ -32,7 +31,6 @@ export class Manager {
   public base: Base
   public stopped = false
   public channels: Channel[]
-  public errorState = 0
 
   constructor(public config: Config) {
     this.base = new Base(this.config)
@@ -68,18 +66,12 @@ export class Manager {
 
     this.channels = this.config.channels.map((c, i) => new Channel(i, this))
     this.base.handleWon = idx => {
-      this.channels[idx].wonState = 1 
-      this.channels[idx].errorState = 0
+      this.channels[idx].lastHitTime = new Date().getTime()
+      this.channels[idx].lastMissTime = new Date().getTime()
     }
 
-    // this.base.handleMiss = () => {
-    //   this.errorState = 1
-    // }
-    // this.base.handleUnfulfilled = (idx: number) => {
-    //   this.channels[idx].errorState = 1
-    // }
     this.base.handleMiss = (idx: number) => {
-      this.channels[idx].errorState = 1
+      this.channels[idx].lastMissTime = new Date().getTime()
     }
 
     this.wrapperDiv.div.addEventListener("keydown", e => {
@@ -128,8 +120,6 @@ export class Manager {
     }
     requestAnimationFrame(this.tick) 
 
-    this.errorState = Math.max(0, this.errorState + CONSTANTS.ERROR_TRANSITION_RATE)
-
     this.foreTime = this.base.ordTime + (this.config.delayLength - this.config.noteLength)
     this.base.update()
     this.draw()
@@ -158,17 +148,13 @@ export class Manager {
     })
 
     if (this.config.showScore) {
-      this.ctx.fillStyle = this.base.scoreSentiment === 0 ? "white" : this.base.scoreSentiment === -1 ? "#ffafaf" : "#afffaf"
+      this.ctx.fillStyle = this.base.scoreSentiment === 0 ? this.config.textColor : this.base.scoreSentiment === -1 ? this.config.textColorNegative : this.config.textColorPositive
       this.ctx.font = "30px 'IBM Plex Mono'"
       this.ctx.textAlign = "left"
       this.ctx.textBaseline = "top"
       this.ctx.fillText(this.base.score.toString(), 15, 15)
     }
     this.drawNotes()
-
-    // Error layer. 
-    this.ctx.fillStyle = `rgba(255, 0, 0, ${this.errorState * 0.5})`
-    this.ctx.fillRect(0, 0, 10000, 10000)
 
     // Pause layer 
     if (this.base.paused) {
@@ -178,7 +164,7 @@ export class Manager {
       this.ctx.font = "50px 'IBM Plex Mono'"
       this.ctx.textAlign = "center"
       this.ctx.textBaseline = "middle"
-      this.ctx.fillStyle = "white"
+      this.ctx.fillStyle = this.config.textColor
       this.ctx.fillText(`PAUSED`, this.wrapperDiv.width / 2, this.wrapperDiv.height / 2)
     }
   }
@@ -188,8 +174,17 @@ export class Manager {
   }
 
   drawNotes() {
-
     for (let note of this.base.notes) {
+      
+      const fb = this.config.fulfillFeedback
+      var fulfillColor = this.config.fulfillColor
+      if (fb === "NOTE") {
+        fulfillColor = this.config.channels[note.index].color
+      } else if (fb === "NOTE_INVERTED") {
+        fulfillColor = helper.invertHex(this.config.channels[note.index].color)
+      }
+
+
       const startTimeNormal = helper.getNormal(this.foreTime, this.base.ordTime, note.startedAt) 
       
       const startTimeY = startTimeNormal * this.cached.foreToCurrentHeight
@@ -207,13 +202,13 @@ export class Manager {
         if (note.fulfilledLength > 0) {
           var normal = Math.min(note.fulfilledLength / (note.endedAt - note.startedAt), 1)
           var passedHeight = tailHeight * normal
-          this.ctx.fillStyle = this.config.fulfillColor
+          this.ctx.fillStyle = fulfillColor
           this.ctx.roundRect(startTimeX - tailWidth * 0.5, startTimeY - passedHeight, tailWidth, passedHeight, 10)
           this.ctx.fill()
         }
       }
   
-      this.ctx.fillStyle = note.fulfilledHead ? this.config.fulfillColor : this.config.channels[note.index].color
+      this.ctx.fillStyle = note.fulfilledHead ? fulfillColor : this.config.channels[note.index].color
       this.ctx.strokeStyle = null
       this.ctx.roundRectCenter(startTimeX, startTimeY, this.cached.noteWidth, this.cached.noteHeight, 10)
       this.ctx.fill()
@@ -227,9 +222,9 @@ export class Manager {
 
 class Channel {
   isPressed: boolean
-  isPressedIdx: number 
-  errorState = 0
-  wonState = 0
+  lastPressedTime: number
+  lastHitTime: number
+  lastMissTime: number
   constructor(public index: number, public mgr: Manager) {
 
     const channelCode = this.mgr.config.channels[index].key
@@ -249,7 +244,7 @@ class Channel {
       if (!this.isPressed && e.code === channelCode) {
         this.mgr.base.handleClickDown(this.index)
         this.isPressed = true 
-        this.isPressedIdx = 0
+        this.lastPressedTime = new Date().getTime()
       }
     })
 
@@ -263,9 +258,6 @@ class Channel {
     })
   }
   draw() {
-    this.errorState = Math.max(0, this.errorState + CONSTANTS.ERROR_TRANSITION_RATE)
-    this.wonState = Math.max(0, this.wonState + CONSTANTS.ERROR_TRANSITION_RATE)
-
     const ctx = this.mgr.ctx 
     const cached = this.mgr.cached
 
@@ -296,21 +288,40 @@ class Channel {
     ctx.strokeStyle = this.mgr.config.lineColor
     ctx.stroke()
 
-
-    this.isPressedIdx++
-    if (this.isPressedIdx < 10 && this.mgr.config.pressChannelFeedback) {
-      ctx.fillStyle = this.mgr.config.channels[this.index].color
+    // PRESS FEEDBACK 
+    const pressFbNormal = (new Date().getTime() - this.lastPressedTime) / this.mgr.config.pressFeedbackDuration
+    const pressFb = this.mgr.config.pressFeedback
+    if (pressFb !== "OFF" && helper.between(0, 1, pressFbNormal)) {
+      const curve = this.mgr.config.pressFeedbackCurve 
+      const color = getDynamicColor(this.mgr.config.channels[this.index].color, this.mgr.config.pressFeedbackColor, pressFb)
+      const adjustedNormal = getAdjustedNormal(pressFbNormal, curve)
+      const opacityNormal = helper.clamp(0, 1, 1 - adjustedNormal)
+      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal* 255)}`
       ctx.fillRect(startX, startY, cached.channelSize, cached.noteHeight * 1.2)
     }
 
-    if (this.wonState > 0 && this.mgr.config.hitChannelFeedback) {
-      ctx.fillStyle = `rgba(64, 128, 255, ${this.wonState * 0.5})`
-      // ctx.fillStyle = `rgba(255, 255, 0, ${this.wonState * 0.5})`
+    // HIT FEEDBACK 
+    const hitFbNormal = (new Date().getTime() - this.lastHitTime) / this.mgr.config.hitFeedbackDuration
+    const hitFb = this.mgr.config.hitFeedback
+    if (hitFb !== "OFF" && helper.between(0, 1, hitFbNormal)) {
+      const curve = this.mgr.config.hitFeedbackCurve 
+      const color = getDynamicColor(this.mgr.config.channels[this.index].color, this.mgr.config.hitFeedbackColor, hitFb)
+      const adjustedNormal = getAdjustedNormal(hitFbNormal, curve)
+      const opacityNormal = helper.clamp(0, 1, 1 - adjustedNormal)
+      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal* 255)}`
       ctx.fillRect(startX, 0, cached.channelSize, this.mgr.wrapperDiv.height)
-    } 
-    if (this.errorState > 0 && this.mgr.config.missChannelFeedback) {
-      ctx.fillStyle = `rgba(255, 0, 0, ${this.errorState * 0.5})`
+    }
+
+    // MISS FEEDBACK 
+    const missFbNormal = (new Date().getTime() - this.lastMissTime) / this.mgr.config.missFeedbackDuration
+    const missFb = this.mgr.config.missFeedback
+    if (missFb !== "OFF" && helper.between(0, 1, missFbNormal)) {
+      const curve = this.mgr.config.missFeedbackCurve 
+      const color = getDynamicColor(this.mgr.config.channels[this.index].color, this.mgr.config.missFeedbackColor, missFb)
+      const adjustedNormal = getAdjustedNormal(missFbNormal, curve)
+      const opacityNormal = helper.clamp(0, 1, 1 - adjustedNormal)
+      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal* 255)}`
       ctx.fillRect(startX, 0, cached.channelSize, this.mgr.wrapperDiv.height)
-    } 
+    }
   }
 }

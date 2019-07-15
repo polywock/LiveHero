@@ -16,7 +16,6 @@ chrome.runtime.onConnect.addListener(async port => {
 
 chrome.runtime.onMessage.addListener((msg, sender, reply) => {
   if (msg.type === "REQUEST_TOGGLE_OFF") {
-    console.log("RECEIVED REQUEST TOGGLE OFF")
     chrome.tabs.sendMessage(sender.tab.id, {
       type: "TOGGLE_OFF"
     })

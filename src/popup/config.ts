@@ -1,4 +1,9 @@
-export const CONFIG_VERSION = 1.02
+import { invertHex } from "../helper"
+
+export const CONFIG_VERSION = 1.06
+
+export type Curve = "STEP" | "LINEAR" | "EASE_OUT_QUAD" | "EASE_OUT_CUBIC" 
+export type DynamicColor = "NOTE" | "NOTE_INVERTED" | "FIXED" | "OFF"
 
 export interface Config {
   version: number,
@@ -18,11 +23,22 @@ export interface Config {
   pauseKey: string,
   exitKey: string,
   showScore: boolean,
-  scorePositiveColor: string,
-  scoreNegativeColor: string,
-  missChannelFeedback: boolean,
-  hitChannelFeedback: boolean,
-  pressChannelFeedback: boolean,
+  textColor: string,
+  textColorPositive: string,
+  textColorNegative: string,
+  missFeedback: DynamicColor,
+  missFeedbackDuration: number,
+  missFeedbackCurve: Curve,
+  missFeedbackColor: string,
+  hitFeedback: DynamicColor,
+  hitFeedbackDuration: number,
+  hitFeedbackCurve: Curve,
+  hitFeedbackColor: string,
+  pressFeedback: DynamicColor,
+  pressFeedbackDuration: number,
+  pressFeedbackCurve: Curve,
+  pressFeedbackColor: string,
+  fulfillFeedback: DynamicColor,
   fulfillColor: string,
   lineColor: string,
   lineWidth: number,
@@ -51,11 +67,22 @@ export const DEFAULT_CONFIG: Config = {
   pauseKey: "Space",
   exitKey: "Escape",
   showScore: true,
-  scorePositiveColor: "#afffaf",
-  scoreNegativeColor: "#ffafaf",
-  missChannelFeedback: false,
-  hitChannelFeedback: false,
-  pressChannelFeedback: true,
+  textColor: "#ffffff",
+  textColorPositive: "#afffaf",
+  textColorNegative: "#ffafaf",
+  hitFeedback: "OFF",
+  hitFeedbackDuration: 150,
+  hitFeedbackCurve: "LINEAR",
+  hitFeedbackColor: "#ffffff",
+  missFeedback: "OFF",
+  missFeedbackDuration: 150,
+  missFeedbackCurve: "LINEAR",
+  missFeedbackColor: "#ff6868",
+  pressFeedback: "NOTE",
+  pressFeedbackDuration: 150,
+  pressFeedbackCurve: "STEP",
+  pressFeedbackColor: "#0000ff",
+  fulfillFeedback: "FIXED",
   fulfillColor: "#ffff00",
   lineColor: "#787878",
   lineWidth: 1,
@@ -171,4 +198,32 @@ export function hasKeyOverride(base: Config["channels"], overrideName: keyof typ
 export const NOTE_THEMES = {
   RGB: ["#ff0000", "#00ff00", "#0000ff"],
   STANDARD: ["#607f9e", "#9a5050", "#71a67a", "#0096FF", "#FF7E79", "#54E294"]
+}
+
+
+export function getAdjustedNormal(normal: number, curve: Curve) {
+	if (curve === "LINEAR") {
+		return normal 
+	} else if (curve === "EASE_OUT_QUAD") {
+		return normal * (2 - normal) 
+	} else if (curve === "EASE_OUT_CUBIC") {
+		return normal ** 3
+	} else if (curve === "STEP") {
+		return Math.floor(normal)
+	} else {
+		return null
+	}
+}
+
+
+export function getDynamicColor(noteColor: string, fixedColor: string, colorType: DynamicColor) {
+	var color = null
+  if (colorType === "NOTE") {
+    color = noteColor
+  } else if (colorType === "NOTE_INVERTED") {
+    color = invertHex(noteColor)
+  } else if (colorType === "FIXED") {
+    color = fixedColor
+  }
+  return color
 }

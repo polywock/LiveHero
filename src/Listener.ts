@@ -1,5 +1,5 @@
 import { getMaxAmp } from "./helper"
-import { Config } from "./game/Config"
+import { Config } from "./popup/config"
 import { findPitch } from "pitchy"
 
 declare global {

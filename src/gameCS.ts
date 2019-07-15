@@ -1,6 +1,6 @@
 
 import { Manager } from "./game/Mgr"
-import { Config } from "./game/Config"
+import { Config } from "./popup/config"
 import { getConfig } from "./browserHelper"
 import { browser } from "webextension-polyfill-ts";
 import "regenerator-runtime/runtime"
@@ -31,7 +31,6 @@ function main() {
     } else if (msg.type === "TOGGLE_OFF") {
       toggleOff()
     } else if (msg.type === "PIPE_SAMPLE") {
-      console.log("GAME NEW SAMPLE")
       mgr && mgr.base.handleNewSample(msg.data)
     }
   })

@@ -60,7 +60,7 @@ export class Note {
 export class Base {
   notes: Note[] = []
   score: number = 0
-  scoreSentiment: -1 | 0 | 1
+  scoreSentiment: -1 | 0 | 1 = 0
   ordTime: number 
   delayTime: number
   handleMiss: (idx: number) => any

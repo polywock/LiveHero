@@ -1,5 +1,6 @@
 
 const chromatic = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+import {  Curve } from "./popup/config"
 
 export function freqToLinear(freq: number) {
   return Math.log2(freq / 440)
@@ -17,55 +18,6 @@ export function fluidFromFreq(freq: number, segments: number) {
 
 export function linearToChromatic(linear: number): string {
   return chromatic[(Math.round(linear * 12) + (12 * 1000)) % 12]  
-}
-
-export function autoCorrelate(buf: Float32Array, sampleRate: number): {
-	freq: number,
-	power: number
-} {
-	var maxSamples = Math.floor(buf.length / 2);
-	var bestLag = -1;
-	var bestCorrelation = 0;
-	var foundGoodCorrelation = false;
-	var correlations = new Array(maxSamples);
-
-	const signalStrength = Math.sqrt(buf.reduce((agg, v) => agg + v * v) / buf.length)
-
-	if (signalStrength < 0.025) // not enough signal
-		return null;
-
-	var lastCorrelation = 1;
-
-	for (var offset = 0; offset < maxSamples; offset++) {
-		var correlation = 0;
-
-		for (var i = 0; i < maxSamples; i++) {
-			correlation += Math.abs((buf[i]) - (buf[i + offset]));
-		}
-		correlation = 1 - (correlation/maxSamples);
-		correlations[offset] = correlation; // store it, for the tweaking we need to do below.
-		if ((correlation > 0.9) && (correlation > lastCorrelation)) {
-			foundGoodCorrelation = true;
-			if (correlation > bestCorrelation) {
-				bestCorrelation = correlation;
-				bestLag = offset;
-			}
-		} else if (foundGoodCorrelation) {
-			var shift = (correlations[bestLag + 1] - correlations[bestLag - 1]) / correlations[bestLag];  
-			return {
-				freq: sampleRate / (bestLag + (8 * shift)),
-				power: bestCorrelation 
-			}
-		}
-		lastCorrelation = correlation;
-  }
-	if (bestCorrelation > 0.01) {
-		return {
-			freq: sampleRate / bestLag,
-			power: bestCorrelation 
-		}
-	}
-	return null;
 }
 
 export function getNormal(lb: number, rb: number, value: number) {
@@ -105,6 +57,9 @@ export function cloneObject<T>(obj: T): T {
 }
 
 export function between(lb: number, rb: number, value: number) {
+	if(isNaN(1 + lb + rb + value)) {
+		return false
+	}
 	if (value < lb || value > rb) {
 		return false 
 	}
@@ -122,6 +77,14 @@ type RGB = {
 	r: number,
 	g: number,
 	b: number
+}
+
+export function numToHex(num: number) {
+	var s = Math.round(num).toString(16)
+	if (s.length === 1) {
+		s = "0".concat(s)
+	}
+	return s.slice(0, 2)
 }
 
 export function parseHex(color: string): RGB {
@@ -146,10 +109,15 @@ export function invertRGB(color: RGB): RGB {
 
 export function rgbToHex(color: RGB): string {
 	return `#${
-		color.r.toString(16)
+		numToHex(color.r)
 	}${
-		color.g.toString(16)
+		numToHex(color.g)
 	}${
-		color.b.toString(16)
+		numToHex(color.b)
 	}`
 }
+
+export function invertHex(color: string) {
+	return rgbToHex(invertRGB(parseHex(color)))
+}
+
