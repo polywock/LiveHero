@@ -1,6 +1,6 @@
 import React from "react"
 import { GlobalContext } from "../globalState/context"
-import { Config, Curve, DynamicColor } from "../config"
+import { Curve, DynamicColor } from "../config"
 import { Field } from "./Field"
 import { NumericInput } from "./NumericInput"
 import { Checkbox } from "./Checkbox"
@@ -12,11 +12,16 @@ import { Fields } from "./Fields"
 
 import "./Options.scss"
 import { Select } from "./Select";
+import { isFirefox } from "../../helper";
+import { requestPermissions, removePermissions, hasPermissions } from "../../browserHelper"
+
+const showPermissionCheckbox = !isFirefox()
 
 type OptionsProps = {}
 
 export const Options = (props: OptionsProps) => {
   const { global, globalMethods } = React.useContext(GlobalContext)
+
   return (
     <div className="Options">
       <Section label="Channels" initialState={false}>
@@ -24,6 +29,28 @@ export const Options = (props: OptionsProps) => {
       </Section>
       <Section label="General" initialState={false}>
         <Fields>
+          {showPermissionCheckbox && (
+            <Field label="Frame Permissions" tooltip="This permission is required if you want Live Hero to listen to embedded videos. For example, without this permission, playing Live Hero WOULD still work with youtube videos playing directly on youtube.com. But, it won't work if it's a youtube video embedded into another website like Reddit.com.">
+              <Checkbox 
+                checked={global.hasPermission} 
+                onChange={checked => {
+                  if (checked) {
+                    requestPermissions().then(granted => {
+                      hasPermissions().then(has => {
+                        globalMethods.setHasPermission(has)
+                      })
+                    })
+                  } else {
+                    removePermissions().then(() => {
+                      hasPermissions().then(has => {
+                        globalMethods.setHasPermission(has)
+                      })
+                    })
+                  }
+                }}
+              />
+          </Field>
+          )}
           <Field label="Audio Delay" tooltip="How long to delay the audio in milliseconds? For reference, 1000ms == 1s">
             <NumericInput 
               value={global.config.delayLength} 

@@ -1,6 +1,6 @@
 {
   "name": "Live Hero",
-  "version": "1.6",
+  "version": "1.6.5",
   "description": "Rhythm game that attaches to videos.",
   "manifest_version": 2,
   "browser_action": {
@@ -11,6 +11,7 @@
     "persist": true
   },
   "permissions": ["activeTab", "storage"],
+  "optional_permissions": ["<all_urls>"],
   "icons": { 
     "48": "logo48.png",
     "128": "logo128.png"

@@ -5,11 +5,12 @@ import "./App.scss"
 import { initialState as globalInitialState } from "../globalState/initialState"
 import { methodsFactory as globalMethodsFactory } from "../globalState/methodsFactory"
 import { GlobalContext } from "../globalState/context"
-import { getConfig } from "../../browserHelper"
+import { getConfig, hasPermissions } from "../../browserHelper"
 import { Options } from "./Options"
 import { Presets } from "./Presets"
 import { MainButtons } from "./MainButtons"
 import { CONFIG_VERSION } from "../config"
+import { PermissionHint } from "./PermissionHint";
 
 type AppProps = {}
 
@@ -19,8 +20,15 @@ export const App = (props: AppProps) => {
   const [global, globalMethods] = useMethods(globalMethodsFactory, globalInitialState)
 
   useEffect(() => {
+
+    // Check if we got permissions 
+    hasPermissions().then(has => {
+      globalMethods.setHasPermission(has)
+    })
+
+    // Get config from storage. 
     getConfig().then(config => {
-      // if we update our config API, do not consider old ones. 
+      // if we update our config API, do not consider older versions.
       if (config.version === CONFIG_VERSION) {
         globalMethods.setConfig(config)
       } else {

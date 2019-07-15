@@ -2,6 +2,7 @@ import { initialState } from "./initialState"
 import { DEFAULT_CONFIG, NOTE_THEMES, copyConfig } from "../config"
 import { getActiveTab, pushConfig } from "../../browserHelper"
 import { browser } from "webextension-polyfill-ts"
+import { isFirefox } from "../../helper";
 
 export const methodsFactory = (state: typeof initialState) => ({
   setConfig(newConfig: typeof DEFAULT_CONFIG) {
@@ -51,26 +52,29 @@ export const methodsFactory = (state: typeof initialState) => ({
   setConfigToDefault() {
     state.config = copyConfig(DEFAULT_CONFIG)
     pushConfig(state.config)
+  },
+  setHasPermission(newValue: boolean) {
+    state.hasPermission = newValue
   }
 })
 
 async function activate() {
-    await Promise.all([
-      browser.tabs.executeScript({
-        allFrames: true,
-        file: "frameCS.js"
-      }),
-      browser.tabs.executeScript({
-        allFrames: false,
-        file: "gameCS.js"
-      })
-    ])
+  await Promise.all([
+    browser.tabs.executeScript({
+      allFrames: true,
+      file: "frameCS.js"
+    }),
+    browser.tabs.executeScript({
+      allFrames: false,
+      file: "gameCS.js"
+    })
+  ])
 
-    const activeTab = await getActiveTab()
-    await browser.tabs.sendMessage(activeTab.id, {
-      type: "TOGGLE_OFF"
-    })
-    await browser.tabs.sendMessage(activeTab.id, {
-      type: "TOGGLE_ON"
-    })
+  const activeTab = await getActiveTab()
+  await browser.tabs.sendMessage(activeTab.id, {
+    type: "TOGGLE_OFF"
+  })
+  await browser.tabs.sendMessage(activeTab.id, {
+    type: "TOGGLE_ON"
+  })
 }

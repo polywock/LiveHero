@@ -24,11 +24,16 @@ export async function getActiveTab() {
   }
 }
 
+const permissions = {origins: ["<all_urls>"]}
 
+export function hasPermissions() {
+  return browser.permissions.contains(permissions)
+}
 
+export function requestPermissions() {
+  return browser.permissions.request(permissions)
+}
 
-export const runtime = {
-  connect: function(connectInfo?: chrome.runtime.ConnectInfo) {
-    return chrome.runtime.connect(connectInfo)
-  }
+export function removePermissions() {
+  return browser.permissions.remove(permissions)
 }

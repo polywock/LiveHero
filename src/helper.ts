@@ -121,3 +121,6 @@ export function invertHex(color: string) {
 	return rgbToHex(invertRGB(parseHex(color)))
 }
 
+export function isFirefox() {
+	return /Firefox\/([0-9\.]+)(?:\s|$)/.test(navigator.userAgent)
+}
