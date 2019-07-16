@@ -159,6 +159,9 @@ export const Options = (props: OptionsProps) => {
                   displayRound={0}
                 /> 
               </Field>
+              <Field label="Window Focused Color">
+                <ColorPicker value={global.config.windowFocusColor} onChange={color => globalMethods.setKeyValue("windowFocusColor", color)}/>
+              </Field>
               <Field label="Background Color">
                 <ColorPicker value={global.config.backgroundColor} onChange={color => globalMethods.setKeyValue("backgroundColor", color)}/>
               </Field>

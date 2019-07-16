@@ -1,6 +1,6 @@
 import { invertHex } from "../helper"
 
-export const CONFIG_VERSION = 1.06
+export const CONFIG_VERSION = 1.07
 
 export type Curve = "STEP" | "LINEAR" | "EASE_OUT_QUAD" | "EASE_OUT_CUBIC" 
 export type DynamicColor = "NOTE" | "NOTE_INVERTED" | "FIXED" | "OFF"
@@ -42,7 +42,8 @@ export interface Config {
   fulfillColor: string,
   lineColor: string,
   lineWidth: number,
-  backgroundColor: string
+  backgroundColor: string,
+  windowFocusColor: string
 }
 
 export const DEFAULT_CONFIG: Config = {
@@ -86,7 +87,8 @@ export const DEFAULT_CONFIG: Config = {
   fulfillColor: "#ffff00",
   lineColor: "#787878",
   lineWidth: 1,
-  backgroundColor: "#000000"
+  backgroundColor: "#000000",
+  windowFocusColor: "#7a00ff"
 }
 
 export const DIFF = {

@@ -46,7 +46,7 @@ export class Manager {
         box-sizing: border-box; 
       }
       #live-hero-div:focus {
-        outline: 1px solid #7a00ff;
+        outline: 1px solid ${this.config.windowFocusColor};
       }
     `
     document.head.appendChild(style)
@@ -119,7 +119,7 @@ export class Manager {
     }
     requestAnimationFrame(this.tick) 
 
-    this.foreTime = this.base.ordTime + (this.config.delayLength - this.config.noteLength)
+    this.foreTime = this.base.ordTime + (this.config.delayLength - (this.config.sampleDelay + 15))
     this.base.update()
     this.draw()
   }
