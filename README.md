@@ -2,7 +2,7 @@
 <img src="https://github.com/polywock/LiveHero/blob/master/assets/markquee.jpg?raw=true" width="500">
 Chrome and Firefox extension that injects a rhythm game to HTML videos including Youtube, Netflix, Prime Video, Hulu, Twitch, etc. If you like games like Guitar Hero and Clone Hero. This is a game for you. 
 
-
+### Video of it available [here](https://streamable.com/m1qrd). 
 
 # Instructions 
 1. Install the [Chrome](https://chrome.google.com/webstore/detail/live-hero/ghjkdokfbcfehdfpconfebbmbclelmlj) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/live-hero) extension. 
