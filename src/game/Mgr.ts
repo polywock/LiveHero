@@ -62,7 +62,6 @@ export class Manager {
     // attach to end of body 
     this.wrapperDiv.div.appendChild(this.canvas)
     document.body.appendChild(this.wrapperDiv.div)
-    this.wrapperDiv.div.focus()
 
     this.channels = this.config.channels.map((c, i) => new Channel(i, this))
     this.base.handleWon = idx => {
