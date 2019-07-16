@@ -1,6 +1,6 @@
 import { invertHex } from "../helper"
 
-export const CONFIG_VERSION = 1.07
+export const CONFIG_VERSION = 1.09
 
 export type Curve = "STEP" | "LINEAR" | "EASE_OUT_QUAD" | "EASE_OUT_CUBIC" 
 export type DynamicColor = "NOTE" | "NOTE_INVERTED" | "FIXED" | "OFF"
@@ -22,6 +22,7 @@ export interface Config {
   allowDualNotes: boolean,
   pauseKey: string,
   exitKey: string,
+  blockAllKeys: boolean,
   showScore: boolean,
   textColor: string,
   textColorPositive: string,
@@ -67,6 +68,7 @@ export const DEFAULT_CONFIG: Config = {
   allowDualNotes: false,
   pauseKey: "Space",
   exitKey: "Escape",
+  blockAllKeys: true,
   showScore: true,
   textColor: "#ffffff",
   textColorPositive: "#afffaf",

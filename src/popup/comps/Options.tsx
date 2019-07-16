@@ -137,6 +137,12 @@ export const Options = (props: OptionsProps) => {
           <Field label="Exit Key">
             <KeyPicker value={global.config.exitKey} onChange={key => globalMethods.setKeyValue("exitKey", key)}/>
           </Field>
+          <Field label="Block All Keys" tooltip="If game window is focused. All keys will be blocked from propogating to the rest of the webpage. For example, if you accidently press 'F', the key will not propogate out and full screen the youtube video.">
+            <Checkbox 
+              checked={global.config.blockAllKeys} 
+              onChange={checked => globalMethods.setKeyValue("blockAllKeys", checked)}
+            />
+          </Field>
         </Fields>
       </Section>
       <Section label="Appearance" initialState={false}>

@@ -75,9 +75,17 @@ export class Manager {
 
     this.wrapperDiv.div.addEventListener("keydown", e => {
       if (e.code === this.config.pauseKey || e.code === this.config.exitKey) {e.stopPropagation(); e.preventDefault()}
+      if (this.config.blockAllKeys) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
     })
     this.wrapperDiv.div.addEventListener("keypress", e => {
       if (e.code === this.config.pauseKey || e.code === this.config.exitKey) {e.stopPropagation(); e.preventDefault()}
+      if (this.config.blockAllKeys) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
     })
 
     this.wrapperDiv.div.addEventListener("keyup", e => {
@@ -93,6 +101,11 @@ export class Manager {
         chrome.runtime.sendMessage({type: "REQUEST_TOGGLE_OFF"})
         e.stopPropagation()
         e.preventDefault()
+      }
+
+      if (this.config.blockAllKeys) {
+        e.preventDefault()
+        e.stopPropagation()
       }
     })
     
