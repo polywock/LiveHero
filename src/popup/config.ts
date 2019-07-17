@@ -50,7 +50,7 @@ export interface Config {
 export const DEFAULT_CONFIG: Config = {
   version: CONFIG_VERSION,
   clarityThreshold: 0.4,
-  volumeThreshold: 0.05,
+  volumeThreshold: 0.04,
   delayLength: 1000, 
   noteLength: 120, // y axis is in time. So note height is actually note length. 
   hitWindowLength: 120 * 1.25, // We can press within this length to fulfill a note. 

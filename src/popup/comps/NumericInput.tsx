@@ -28,7 +28,7 @@ export const NumericInput = (props: NumericInputProps) => {
       <div className="value">{value}</div>
       <button className="button" onClick={() => {
         incTrigger()
-        if (incCounter > 2) {
+        if (incCounter > 4) {
           props.setValue(props.value + props.step * (props.fastModeScalar || 10))
         } else {
           props.setValue(props.value + props.step)

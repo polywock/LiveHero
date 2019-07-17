@@ -103,7 +103,7 @@ export const Options = (props: OptionsProps) => {
             <NumericInput 
               value={global.config.volumeThreshold} 
               setValue={newValue => globalMethods.setKeyValue("volumeThreshold", newValue)}
-              step={0.05}
+              step={0.01}
               displayRound={2}
             /> 
           </Field>
