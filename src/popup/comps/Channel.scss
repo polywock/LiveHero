@@ -1,32 +1,12 @@
-@import "../global";
 
 .Channel {
   display: grid; 
-  grid-template-columns: 20px 10px 5fr 10px 50px;
+  grid-template-columns: max-content 1fr 50px;
   align-items: center;
+  grid-column-gap: 10px;
 
-  .remove-wrapper {
+  & > button:first-child {
     cursor: pointer;
-    line-height: 0%;
-    
-    &:focus {
-      outline: 1px solid $colorFocus;
-    }
-  }
-
-  .Remove {
-    grid-column: 1 / span 1; 
-
-    path {
-      fill: #f55;
-    }
-  }
-
-  .KeyPicker {
-    grid-column: 3 / span 1; 
-  }
-
-  .ColorPicker {
-    grid-column: 5 / span 1; 
+    padding: 3px 6px;
   }
 }

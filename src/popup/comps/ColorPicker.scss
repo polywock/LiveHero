@@ -1,14 +1,13 @@
-@import "../global";
+
 
 .ColorPicker {
 
   width: 50px; 
   height: 30px;
 
-  .well {
+  & > .well {
     background-color: red; 
-    // border-radius: 10px; 
-    border: 3px solid $colorFg; 
+    border: 3px solid #3D4456; 
     transition: 0.1 border-width ease-out; 
     width: 100%; 
     height: 100%;
@@ -20,11 +19,11 @@
     }
 
     &:focus {
-      outline: 1px solid $colorFocus;
+      outline: 1px solid #ff6;
     }
   }
 
-  .bg {
+  & > .bg {
     position: fixed;
     width: 100vw; 
     height: 100vh;

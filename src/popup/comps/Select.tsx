@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Props } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Triangle } from "./Triangle"
 import "./Select.scss"
 

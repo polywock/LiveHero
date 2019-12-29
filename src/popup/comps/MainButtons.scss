@@ -1,11 +1,11 @@
-@import "../global";
+
 
 .MainButtons {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr; 
   grid-column-gap: 10px;
 
-  .button:first-child {
+  & > button:first-child {
     background-color: #4a619a;
   }
 }

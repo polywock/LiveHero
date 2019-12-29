@@ -1,32 +1,31 @@
-@import "../global";
+
 
 .Select {
-  background-color: $colorFg;
+  background-color: #3D4456;
   display: grid; 
   grid-template-columns: calc(100% - 10px) 10px;
   align-items: center;
   padding: 5px;
   padding-right: 10px;
-  // border-radius: 5px;
   user-select: none;
   cursor: pointer;
 
   &:focus {
-    outline: 1px solid $colorFocus;
+    outline: 1px solid #ff6;
   }
 
-  .value {
+  & > .value {
     text-align: center;
   }
 
-  .Triangle {
+  & > .Triangle {
     polygon {
       fill: white;
       opacity: 0.75;
     }
   }
 
-  .bg {
+  & > .bg {
     width: 100vw; 
     height: 100vh; 
     position: fixed; 
@@ -38,16 +37,16 @@
     justify-content: center;
     z-index: 1000;
 
-    .fg {
+    & > .fg {
       text-align: center; 
       width: 200px;
 
-      .SelectOption {
+      & > .SelectOption {
         padding: 5px; 
-        background-color: $colorFg; 
+        background-color: #3D4456; 
 
         &:focus {
-          outline: 1px solid $colorFocus;
+          outline: 1px solid #ff6;
         }
       }
     }

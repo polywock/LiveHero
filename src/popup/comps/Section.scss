@@ -1,4 +1,4 @@
-@import "../global";
+
 
 
 .Section {
@@ -7,24 +7,24 @@
     margin-left: 10px;
   }
 
-  .wrapper {
+  & > .wrapper {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
 
-    .control {
+    & > .control {
       border: 1px solid rgba(255, 255, 255, 0.25);
-      background-color: $colorFg;
+      background-color: #3D4456;
       font-family: monospace;
       padding: 0px 5px;
       margin-right: 10px;
 
       &:focus {
-        outline: 1px solid $colorFocus;
+        outline: 1px solid #ff6;
       }
     }
 
-    .label {
+    & > .label {
       font-size: 1.1em;
     }
   }

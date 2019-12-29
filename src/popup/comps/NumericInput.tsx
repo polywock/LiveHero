@@ -1,6 +1,6 @@
-import React from "react"
-import { isNullOrUndefined } from "../../helper"
+import React, { useState, useMemo, useEffect } from "react"
 import "./NumericInput.scss"
+import { round } from "../../helper"
 
 type NumericInputProps = {
   value: number,
@@ -11,46 +11,37 @@ type NumericInputProps = {
 }
 
 export const NumericInput = (props: NumericInputProps) => {
-  const value = props.value.toFixed(isNullOrUndefined(props.displayRound) ? 2 : props.displayRound)
-  const { trigger: decTrigger, counter: decCounter } = useQuickTriggerCounter(250)
-  const { trigger: incTrigger, counter: incCounter } = useQuickTriggerCounter(250)
+  const [inputValue, setInputValue] = useState("")
+
+  useEffect(() => {
+    setInputValue(round(props.value, props.displayRound ?? 2).toString())
+  }, [props.value])
+  
+  const isValid = useMemo(() => {
+    if (/^-?(?=[\d\.])\d*(\.\d+)?$/.test(inputValue.trim())) {
+      props.setValue(parseFloat(inputValue.trim()))
+      return true 
+    } else {
+      return false 
+    }
+  }, [inputValue])
+
 
   return (
     <div className="NumericInput">
       <button className="button" onClick={() => {
-        decTrigger()
-        if (decCounter > 2) {
-          props.setValue(props.value - props.step * (props.fastModeScalar || 10))
-        } else {
-          props.setValue(props.value - props.step)
-        }
+        props.setValue(props.value - props.step)
       }}>-</button>
-      <div className="value">{value}</div>
+      <input style={{
+        backgroundColor: isValid ? "#3D4456" : "#6D4456"
+      }} type="text" className="value" onChange={e => {
+        setInputValue(e.target.value)
+      }} value={inputValue}/>
       <button className="button" onClick={() => {
-        incTrigger()
-        if (incCounter > 4) {
-          props.setValue(props.value + props.step * (props.fastModeScalar || 10))
-        } else {
-          props.setValue(props.value + props.step)
-        }
+        props.setValue(props.value + props.step)
       }}>+</button>
     </div>
   )
 }
 
 
-export const useQuickTriggerCounter = (duration: number) => {
-  const [lastTime, setLastTime] = React.useState(-Infinity) 
-  const [counter, setCounter] = React.useState(0)
-  const trigger = () => {
-    const now = new Date().getTime() 
-    if (now - lastTime < duration) {
-      setCounter(counter + 1)
-    } else {
-      setCounter(0)
-    }
-    setLastTime(now)
-  }
-
-  return {trigger, counter} 
-}

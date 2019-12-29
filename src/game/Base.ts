@@ -1,7 +1,6 @@
-import { Config } from "../popup/config"
+import { Config } from "../popup/types"
 import * as helper from "../helper"
 import { Sample } from "../Listener"
-
 
 export const CONSTANTS = {
   CLEAR_DELAY: 1,
@@ -10,7 +9,6 @@ export const CONSTANTS = {
   TAIL_FULFILL: 0.9,
   MERGE_PADDING: 0.03
 }
-
 
 export class Note {
   endedAt: number

@@ -1,6 +1,7 @@
 
 import { ScalableDiv } from "../ScalableDiv"
-import { Config, getAdjustedNormal, getDynamicColor } from "../popup/config"
+import { Config } from "../popup/types"
+import { getAdjustedNormal, getDynamicColor } from "../popup/utils"
 import { Base, CONSTANTS as BASE_CONSTANTS } from "./Base"
 import * as helper from "../helper"
 import { setup as ctxSetup } from "../ctx"

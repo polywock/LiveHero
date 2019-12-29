@@ -1,46 +1,41 @@
 import React from "react"
-import "./Presets.scss"
 import { Field } from "./Field"
 import { Select } from "./Select"
-import { GlobalContext } from "../globalState/context"
-import { applyKeyOverride, hasKeyOverride, KEYS, DIFF, hasDiffOverride, applyDiffOverride } from "../config"
+import { KEYS, DIFF } from "../defaults"
+import { applyKeyOverride, hasKeyOverride, hasDiffOverride } from "../utils"
+import { AppStateContext } from "../AppStateContext"
 
 type PresetsProps = {}
 
 export const Presets = (props: PresetsProps) => {
-  const { global, globalMethods } = React.useContext(GlobalContext)
+  const { state, updateState } = React.useContext(AppStateContext)
   
+  // check if config matches key preset.
   const keyOverride = React.useMemo(() => {
-    var keyOverride: string
-    if (hasKeyOverride(global.config.channels, "ASD")) {
-      keyOverride = "ASD"
-    } else if (hasKeyOverride(global.config.channels, "JKL")) {
-      keyOverride = "JKL"
-    } else if (hasKeyOverride(global.config.channels, "ASDJKL")) {
-      keyOverride = "ASDJKL"
+    for (let key of Object.keys(KEYS) as (keyof typeof KEYS)[]) {
+      if (hasKeyOverride(state.config, key)) {
+        return key  
+      }
     }
-    return keyOverride
-  }, [global.config])
+  }, [state.config])
 
+  // check if config matches diff preset.
   const diffOverride = React.useMemo(() => {
-    var diffOverride: string
-    if (hasDiffOverride(global.config, "EASY")) {
-      diffOverride = "Easy"
-    } else if (hasDiffOverride(global.config, "NORMAL")) {
-      diffOverride = "Normal"
-    } else if (hasDiffOverride(global.config, "HARD")) {
-      diffOverride = "Hard"
+    for (let diff of Object.keys(DIFF) as (keyof typeof DIFF)[]) {
+      if (hasDiffOverride(state.config, diff)) {
+        return diff  
+      }
     }
-    return diffOverride
-  }, [global.config])
+  }, [state.config])
+
 
   return (
     <div className="Presets Fields">
         <Field label="Keys">
         <Select options={["ASD", "JKL", "ASDJKL"]} value={keyOverride || "CUSTOM"} onChange={(newValue) => {
-          globalMethods.setConfig(
-            applyKeyOverride(global.config, newValue as keyof typeof KEYS, global.noteTheme)
-          )
+          updateState(d => {
+            d.config.channels = applyKeyOverride(state.config.channels, newValue as keyof typeof KEYS)
+          })
         }}/>
       </Field>
       <Field label="Difficulty" tooltip="Applies an override to your current settings for certain values.">
@@ -49,9 +44,10 @@ export const Presets = (props: PresetsProps) => {
           {value: "NORMAL", name: "Normal"}, 
           {value: "HARD", name: "Hard"}
         ]} value={diffOverride || "CUSTOM"} onChange={(newValue) => {
-          globalMethods.setConfig(
-            applyDiffOverride(global.config, newValue as keyof typeof DIFF)
-          )
+          updateState(d => {
+            let override = DIFF[newValue as keyof typeof DIFF]
+            d.config = {...d.config, ...override}
+          })
         }}/>
       </Field>
     </div>

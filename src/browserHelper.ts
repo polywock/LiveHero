@@ -1,5 +1,5 @@
 import { browser } from "webextension-polyfill-ts"
-import { Config } from "./popup/config"
+import { Config } from "./popup/types"
 
 export function pushConfig(newConfig: Config) {
   browser.storage.local.set({config: JSON.stringify(newConfig)})

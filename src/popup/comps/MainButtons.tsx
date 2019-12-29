@@ -1,17 +1,24 @@
 
 import React from "react"
-import {  GlobalContext } from "../globalState/context"
+import { AppStateContext } from "../AppStateContext"
 import "./MainButtons.scss"
+import { callInject, callRemove } from "../utils"
+import { DEFAULT_CONFIG } from "../defaults"
+import produce from "immer"
 
 type MainButtonsProps = {}
 
 export const MainButtons = (props: MainButtonsProps) => {
-  const {globalMethods} = React.useContext(GlobalContext)
+  const {state, updateState} = React.useContext(AppStateContext)
   return (
     <div className="MainButtons">
-      <button className="button" onClick={() => globalMethods.callInject()}>Inject</button>
-      <button className="button" onClick={() => globalMethods.callRemove()}>Remove</button>
-      <button className="button" onClick={() => globalMethods.setConfigToDefault()}>Default</button>
+      <button onClick={() => callInject(state)}>Inject</button>
+      <button onClick={() => callRemove(state)}>Remove</button>
+      <button onClick={() => {
+        updateState(d => {
+          d.config = produce(DEFAULT_CONFIG, d => {})
+        })
+      }}>Default</button>
     </div>
   )
 }

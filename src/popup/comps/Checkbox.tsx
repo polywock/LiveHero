@@ -22,7 +22,6 @@ export const Checkbox = (props: CheckboxProps) => {
         }
       }}
     >
-      <div className="inner"></div>
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { useBoolState } from "../hooks/boolState"
 import "./KeyPicker.scss"
 
 type KeyPickerProps = {
@@ -8,34 +7,34 @@ type KeyPickerProps = {
 }
 
 export const KeyPicker = (props: KeyPickerProps) => {
-  const [enterState, changeEnterState] = useBoolState(false)
-  const [flag, setFlag] = useState(false) 
+  const [enterState, setEnterState] = useState(false)
+  const [viaEnterKeyFlag, setviaEnterKeyFlag] = useState(false) 
 
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && flag === false) {
-      changeEnterState.toggle()
-      setFlag(true)
+    if (e.key === "Enter" && !viaEnterKeyFlag) {
+      setEnterState(!enterState)
+      setviaEnterKeyFlag(true)
       return 
     }
 
     if (enterState === true) {
       if (e.nativeEvent.code) {
         props.onChange && props.onChange(e.nativeEvent.code)
-        changeEnterState.deactivate()
+        setEnterState(false)
       }
     }
   }
 
   const handleOnKeyUp= (e: React.KeyboardEvent) => {
-    e.key === "Enter" && flag === true && setFlag(false)
+    e.key === "Enter" && viaEnterKeyFlag === true && setviaEnterKeyFlag(false)
   }
 
   return (
     <div 
-      onBlur={() => changeEnterState.deactivate()} 
+      onBlur={() => setEnterState(false)} 
       onKeyDown={handleOnKeyDown} 
       onKeyUp={handleOnKeyUp}
-      onClick={e => changeEnterState.toggle()} 
+      onClick={e => setEnterState(!enterState)} 
       tabIndex={0} 
       className="KeyPicker">
       {enterState ? "..." : props.value}

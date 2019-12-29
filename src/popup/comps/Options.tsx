@@ -1,6 +1,5 @@
 import React from "react"
-import { GlobalContext } from "../globalState/context"
-import { Curve, DynamicColor } from "../config"
+import { Curve, DynamicColor } from "../types"
 import { Field } from "./Field"
 import { NumericInput } from "./NumericInput"
 import { Checkbox } from "./Checkbox"
@@ -9,18 +8,19 @@ import { KeyPicker } from "./KeyPicker"
 import { Section } from "./Section"
 import { Channels } from "./Channels"
 import { Fields } from "./Fields"
-
-import "./Options.scss"
 import { Select } from "./Select";
 import { isFirefox } from "../../helper";
 import { requestPermissions, removePermissions, hasPermissions } from "../../browserHelper"
+import { AppStateContext } from "../AppStateContext"
+
+import "./Options.scss"
 
 const showPermissionCheckbox = !isFirefox()
 
 type OptionsProps = {}
 
 export const Options = (props: OptionsProps) => {
-  const { global, globalMethods } = React.useContext(GlobalContext)
+  const { state, updateState } = React.useContext(AppStateContext)
 
   return (
     <div className="Options">
@@ -32,19 +32,15 @@ export const Options = (props: OptionsProps) => {
           {showPermissionCheckbox && (
             <Field label="Frame Permissions" tooltip="This permission is required if you want Live Hero to listen to embedded videos. For example, without this permission, playing Live Hero WOULD still work with youtube videos playing directly on youtube.com. But, it won't work if it's a youtube video embedded into another website like Reddit.com.">
               <Checkbox 
-                checked={global.hasPermission} 
+                checked={state.hasPermission} 
                 onChange={checked => {
                   if (checked) {
                     requestPermissions().then(granted => {
-                      hasPermissions().then(has => {
-                        globalMethods.setHasPermission(has)
-                      })
+                      hasPermissions().then(has => updateState(d => {d.hasPermission = has}))
                     })
                   } else {
                     removePermissions().then(() => {
-                      hasPermissions().then(has => {
-                        globalMethods.setHasPermission(has)
-                      })
+                      hasPermissions().then(has => updateState(d => {d.hasPermission = has}))
                     })
                   }
                 }}
@@ -53,78 +49,78 @@ export const Options = (props: OptionsProps) => {
           )}
           <Field label="Audio Delay" tooltip="How long to delay the audio in milliseconds? For reference, 1000ms == 1s">
             <NumericInput 
-              value={global.config.delayLength} 
-              setValue={newValue => globalMethods.setKeyValue("delayLength", newValue)}
+              value={state.config.delayLength} 
+              setValue={newValue => updateState(d => {d.config.delayLength = newValue})}
               step={50}
               displayRound={0}
             /> 
           </Field>
           <Field label="Sample Rate" tooltip="How often to sample the audio in milliseconds. For reference, 1000ms == 1s">
             <NumericInput 
-              value={global.config.sampleDelay} 
-              setValue={newValue => globalMethods.setKeyValue("sampleDelay", newValue)}
+              value={state.config.sampleDelay} 
+              setValue={newValue => updateState(d => {d.config.sampleDelay = newValue})}
               step={50}
               displayRound={0}
             /> 
           </Field>
           <Field label="Note Rate" tooltip="How often to generate a new note in milliseconds. For reference, 1000ms == 1s">
             <NumericInput 
-              value={global.config.noteDelay} 
-              setValue={newValue => globalMethods.setKeyValue("noteDelay", newValue)}
+              value={state.config.noteDelay} 
+              setValue={newValue => updateState(d => {d.config.noteDelay = newValue})}
               step={50}
               displayRound={0}
             /> 
           </Field>
           <Field label="Note Length" tooltip="Controls the height of the note. Why in time? Because the Y axis is time. For reference, 1000ms == 1s">
             <NumericInput 
-              value={global.config.noteLength} 
-              setValue={newValue => globalMethods.setKeyValue("noteLength", newValue)}
+              value={state.config.noteLength} 
+              setValue={newValue => updateState(d => {d.config.noteLength = newValue})}
               step={10}
               displayRound={0}
             /> 
           </Field>
           <Field label="Hit Window Length" tooltip="You must hit the note within the hit window length. For reference, 1000ms == 1s">
             <NumericInput 
-              value={global.config.hitWindowLength} 
-              setValue={newValue => globalMethods.setKeyValue("hitWindowLength", newValue)}
+              value={state.config.hitWindowLength} 
+              setValue={newValue => updateState(d => {d.config.hitWindowLength = newValue})}
               step={10}
               displayRound={0}
             /> 
           </Field>
           <Field label="Gutter Length" tooltip="Gutter to see notes go past current time in milliseconds. For reference, 1000ms == 1s">
             <NumericInput 
-              value={global.config.gutterLength} 
-              setValue={newValue => globalMethods.setKeyValue("gutterLength", newValue)}
+              value={state.config.gutterLength} 
+              setValue={newValue => updateState(d => {d.config.gutterLength = newValue})}
               step={5}
               displayRound={0}
             /> 
           </Field>
           <Field label="Volume Threshold" tooltip="Volume must be over this threshold to register as note. If you watch on low volumes, you might need to decrease this value.">
             <NumericInput 
-              value={global.config.volumeThreshold} 
-              setValue={newValue => globalMethods.setKeyValue("volumeThreshold", newValue)}
+              value={state.config.volumeThreshold} 
+              setValue={newValue => updateState(d => {d.config.volumeThreshold = newValue})}
               step={0.01}
               displayRound={2}
             /> 
           </Field>
           <Field label="Clarity Threshold" tooltip="Pitch detector returns clarity metric. Clarity must be over this threshold to register as note. For reference, 1000ms == 1s">
             <NumericInput 
-              value={global.config.clarityThreshold} 
-              setValue={newValue => globalMethods.setKeyValue("clarityThreshold", newValue)}
+              value={state.config.clarityThreshold} 
+              setValue={newValue => updateState(d => {d.config.clarityThreshold = newValue})}
               step={0.05}
               displayRound={2}
             /> 
           </Field>
           <Field label="Allow Note Merging">
             <Checkbox 
-              checked={global.config.allowMerging} 
-              onChange={checked => globalMethods.setKeyValue("allowMerging", checked)}
+              checked={state.config.allowMerging} 
+              onChange={checked => updateState(d => {d.config.allowMerging = checked})}
             />
           </Field>
           <Field label="Allow Dual Notes" tooltip="If a note is bordering between two channels. A note will be placed on both channels.">
             <Checkbox 
-              checked={global.config.allowDualNotes} 
-              onChange={checked => globalMethods.setKeyValue("allowDualNotes", checked)}
+              checked={state.config.allowDualNotes} 
+              onChange={checked => updateState(d => {d.config.allowDualNotes = checked})}
             />
           </Field>
         </Fields>
@@ -132,15 +128,15 @@ export const Options = (props: OptionsProps) => {
       <Section label="Controls" initialState={false}>
         <Fields>
           <Field label="Pause Key">
-            <KeyPicker value={global.config.pauseKey} onChange={key => globalMethods.setKeyValue("pauseKey", key)}/>
+            <KeyPicker value={state.config.pauseKey} onChange={key => updateState(d => {d.config.pauseKey = key})}/>
           </Field>
           <Field label="Exit Key">
-            <KeyPicker value={global.config.exitKey} onChange={key => globalMethods.setKeyValue("exitKey", key)}/>
+            <KeyPicker value={state.config.exitKey} onChange={key => updateState(d => {d.config.exitKey = key})}/>
           </Field>
           <Field label="Block All Keys" tooltip="If game window is focused. All keys will be blocked from propogating to the rest of the webpage. For example, if you accidently press 'F', the key will not propogate out and full screen the youtube video.">
             <Checkbox 
-              checked={global.config.blockAllKeys} 
-              onChange={checked => globalMethods.setKeyValue("blockAllKeys", checked)}
+              checked={state.config.blockAllKeys} 
+              onChange={checked => updateState(d => {d.config.blockAllKeys = checked})}
             />
           </Field>
         </Fields>
@@ -151,33 +147,33 @@ export const Options = (props: OptionsProps) => {
             <Fields>
               <Field label="Initial Height" tooltip="Initial height of game window. You can resize it by dragging on the edges.">
                 <NumericInput 
-                  value={global.config.initialHeight} 
-                  setValue={newValue => globalMethods.setKeyValue("initialHeight", newValue)}
+                  value={state.config.initialHeight} 
+                  setValue={newValue => updateState(d => {d.config.initialHeight = newValue})}
                   step={10}
                   displayRound={0}
                 /> 
               </Field>
               <Field label="Initial Width" tooltip="Initial width of each channel on game window. You can resize it by dragging on the window edges.">
                 <NumericInput 
-                  value={global.config.initialChannelWidth} 
-                  setValue={newValue => globalMethods.setKeyValue("initialChannelWidth", newValue)}
+                  value={state.config.initialChannelWidth} 
+                  setValue={newValue =>updateState(d => {d.config.initialChannelWidth = newValue})}
                   step={10}
                   displayRound={0}
                 /> 
               </Field>
               <Field label="Window Focused Color">
-                <ColorPicker value={global.config.windowFocusColor} onChange={color => globalMethods.setKeyValue("windowFocusColor", color)}/>
+                <ColorPicker value={state.config.windowFocusColor} onChange={color => updateState(d => {d.config.windowFocusColor = color})}/>
               </Field>
               <Field label="Background Color">
-                <ColorPicker value={global.config.backgroundColor} onChange={color => globalMethods.setKeyValue("backgroundColor", color)}/>
+                <ColorPicker value={state.config.backgroundColor} onChange={color => updateState(d => {d.config.backgroundColor = color})}/>
               </Field>
               <Field label="Line Color">
-                <ColorPicker value={global.config.lineColor} onChange={color => globalMethods.setKeyValue("lineColor", color)}/>
+                <ColorPicker value={state.config.lineColor} onChange={color => updateState(d => {d.config.lineColor = color})}/>
               </Field>
               <Field label="Line Width">
                 <NumericInput 
-                  value={global.config.lineWidth} 
-                  setValue={newValue => globalMethods.setKeyValue("lineWidth", newValue)}
+                  value={state.config.lineWidth} 
+                  setValue={newValue => updateState(d => {d.config.lineWidth = newValue})}
                   step={1}
                   displayRound={0}
                 /> 
@@ -187,13 +183,13 @@ export const Options = (props: OptionsProps) => {
           <Section label="Text Color" initialState={false}>
             <Fields>
               <Field label="Neutral">
-                <ColorPicker value={global.config.textColor} onChange={color => globalMethods.setKeyValue("textColor", color)}/>
+                <ColorPicker value={state.config.textColor} onChange={color => updateState(d => {d.config.textColor = color})}/>
               </Field>
               <Field label="Positive">
-                <ColorPicker value={global.config.textColorPositive} onChange={color => globalMethods.setKeyValue("textColorPositive", color)}/>
+                <ColorPicker value={state.config.textColorPositive} onChange={color => updateState(d => {d.config.textColorPositive = color})}/>
               </Field>
               <Field label="Negative">
-                <ColorPicker value={global.config.textColorNegative} onChange={color => globalMethods.setKeyValue("textColorNegative", color)}/>
+                <ColorPicker value={state.config.textColorNegative} onChange={color => updateState(d => {d.config.textColorNegative = color})}/>
               </Field>
             </Fields>
           </Section>
@@ -203,31 +199,31 @@ export const Options = (props: OptionsProps) => {
                 <Fields>
                   <Field label="Color Type" tooltip="This determines the color of the feedback. 'Off' means no feedback. 'Note' is color of note. 'Note Inverted' is color of note inverted. 'Fixed' means a fixed color. If you select this, an option for a color would show up.">
                     <Select 
-                      value={dyanmicColorSelectMap.get(global.config.pressFeedback)} 
+                      value={dyanmicColorSelectMap.get(state.config.pressFeedback)} 
                       options={Array.from(dyanmicColorSelectMap.keys()).map(key => ({value: key, name: dyanmicColorSelectMap.get(key)}))}
-                      onChange={option => globalMethods.setKeyValue("pressFeedback", option as any)}
+                      onChange={option => updateState(d => {d.config.pressFeedback = option as any})}
                     />
                   </Field>
-                  {global.config.pressFeedback === "FIXED" && (
+                  {state.config.pressFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={global.config.pressFeedbackColor} onChange={color => globalMethods.setKeyValue("pressFeedbackColor", color)}/>
+                      <ColorPicker value={state.config.pressFeedbackColor} onChange={color => updateState(d => {d.config.pressFeedbackColor = color})}/>
                     </Field>
                   )}
-                  {global.config.pressFeedback !== "OFF" && (
+                  {state.config.pressFeedback !== "OFF" && (
                     <>
                       <Field label="Duration">
                         <NumericInput 
-                          value={global.config.pressFeedbackDuration} 
-                          setValue={newValue => globalMethods.setKeyValue("pressFeedbackDuration", newValue)}
+                          value={state.config.pressFeedbackDuration} 
+                          setValue={newValue => updateState(d => {d.config.pressFeedbackDuration = newValue})}
                           step={10}
                           displayRound={0}
                         /> 
                       </Field>
                       <Field label="Curve">
                         <Select 
-                          value={curveSelectMap.get(global.config.pressFeedbackCurve)} 
+                          value={curveSelectMap.get(state.config.pressFeedbackCurve)} 
                           options={Array.from(curveSelectMap.keys()).map(key => ({value: key, name: curveSelectMap.get(key)}))}
-                          onChange={option => globalMethods.setKeyValue("pressFeedbackCurve", option as any)}
+                          onChange={option =>  updateState(d => {d.config.pressFeedbackCurve = option as any})}
                         />
                       </Field>
                     </>
@@ -238,31 +234,31 @@ export const Options = (props: OptionsProps) => {
                 <Fields>
                   <Field label="Color Type" tooltip="This determines the color of the feedback. 'Off' means no feedback. 'Note' is color of note. 'Note Inverted' is color of note inverted. 'Fixed' means a fixed color. If you select this, an option for a color would show up.">
                     <Select 
-                      value={dyanmicColorSelectMap.get(global.config.hitFeedback)} 
+                      value={dyanmicColorSelectMap.get(state.config.hitFeedback)} 
                       options={Array.from(dyanmicColorSelectMap.keys()).map(key => ({value: key, name: dyanmicColorSelectMap.get(key)}))}
-                      onChange={option => globalMethods.setKeyValue("hitFeedback", option as any)}
+                      onChange={option =>  updateState(d => {d.config.hitFeedback = option as any})}
                     />
                   </Field>
-                  {global.config.hitFeedback === "FIXED" && (
+                  {state.config.hitFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={global.config.hitFeedbackColor} onChange={color => globalMethods.setKeyValue("hitFeedbackColor", color)}/>
+                      <ColorPicker value={state.config.hitFeedbackColor} onChange={color => updateState(d => {d.config.hitFeedbackColor = color})}/>
                     </Field>
                   )}
-                  {global.config.hitFeedback !== "OFF" && (
+                  {state.config.hitFeedback !== "OFF" && (
                     <>
                       <Field label="Duration">
                         <NumericInput 
-                          value={global.config.hitFeedbackDuration} 
-                          setValue={newValue => globalMethods.setKeyValue("hitFeedbackDuration", newValue)}
+                          value={state.config.hitFeedbackDuration} 
+                          setValue={newValue =>  updateState(d => {d.config.hitFeedbackDuration = newValue})}
                           step={10}
                           displayRound={0}
                         /> 
                       </Field>
                       <Field label="Curve">
                         <Select 
-                          value={curveSelectMap.get(global.config.hitFeedbackCurve)} 
+                          value={curveSelectMap.get(state.config.hitFeedbackCurve)} 
                           options={Array.from(curveSelectMap.keys()).map(key => ({value: key, name: curveSelectMap.get(key)}))}
-                          onChange={option => globalMethods.setKeyValue("hitFeedbackCurve", option as any)}
+                          onChange={option =>  updateState(d => {d.config.hitFeedbackCurve = option as any})}
                         />
                       </Field>
                     </>
@@ -273,31 +269,31 @@ export const Options = (props: OptionsProps) => {
                 <Fields>
                   <Field label="Color Type" tooltip="This determines the color of the feedback. 'Off' means no feedback. 'Note' is color of note. 'Note Inverted' is color of note inverted. 'Fixed' means a fixed color. If you select this, an option for a color would show up.">
                     <Select 
-                      value={dyanmicColorSelectMap.get(global.config.missFeedback)} 
+                      value={dyanmicColorSelectMap.get(state.config.missFeedback)} 
                       options={Array.from(dyanmicColorSelectMap.keys()).map(key => ({value: key, name: dyanmicColorSelectMap.get(key)}))}
-                      onChange={option => globalMethods.setKeyValue("missFeedback", option as any)}
+                      onChange={option =>  updateState(d => {d.config.missFeedback = option as any})}
                     />
                   </Field>
-                  {global.config.missFeedback === "FIXED" && (
+                  {state.config.missFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={global.config.missFeedbackColor} onChange={color => globalMethods.setKeyValue("missFeedbackColor", color)}/>
+                      <ColorPicker value={state.config.missFeedbackColor} onChange={color =>  updateState(d => {d.config.missFeedbackColor = color})}/>
                     </Field>
                   )}
-                  {global.config.missFeedback !== "OFF" && (
+                  {state.config.missFeedback !== "OFF" && (
                     <>
                       <Field label="Duration">
                         <NumericInput 
-                          value={global.config.missFeedbackDuration} 
-                          setValue={newValue => globalMethods.setKeyValue("missFeedbackDuration", newValue)}
+                          value={state.config.missFeedbackDuration} 
+                          setValue={newValue =>  updateState(d => {d.config.missFeedbackDuration = newValue})}
                           step={10}
                           displayRound={0}
                         /> 
                       </Field>
                       <Field label="Curve">
                         <Select 
-                          value={curveSelectMap.get(global.config.missFeedbackCurve)} 
+                          value={curveSelectMap.get(state.config.missFeedbackCurve)} 
                           options={Array.from(curveSelectMap.keys()).map(key => ({value: key, name: curveSelectMap.get(key)}))}
-                          onChange={option => globalMethods.setKeyValue("missFeedbackCurve", option as any)}
+                          onChange={option =>  updateState(d => {d.config.missFeedbackCurve = option as any})}
                         />
                       </Field>
                     </>
@@ -308,22 +304,22 @@ export const Options = (props: OptionsProps) => {
                 <Fields>
                   <Field label="Color Type" tooltip="This determines the color of the feedback. 'Off' means no feedback. 'Note' is color of note. 'Note Inverted' is color of note inverted. 'Fixed' means a fixed color. If you select this, an option for a color would show up.">
                     <Select 
-                      value={dyanmicColorSelectMap.get(global.config.fulfillFeedback)} 
+                      value={dyanmicColorSelectMap.get(state.config.fulfillFeedback)} 
                       options={Array.from(dyanmicColorSelectMap.keys()).map(key => ({value: key, name: dyanmicColorSelectMap.get(key)}))}
-                      onChange={option => globalMethods.setKeyValue("fulfillFeedback", option as any)}
+                      onChange={option =>  updateState(d => {d.config.fulfillFeedback = option as any})}
                     />
                   </Field>
-                  {global.config.fulfillFeedback === "FIXED" && (
+                  {state.config.fulfillFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={global.config.fulfillColor} onChange={color => globalMethods.setKeyValue("fulfillColor", color)}/>
+                      <ColorPicker value={state.config.fulfillColor} onChange={color =>  updateState(d => {d.config.fulfillColor = color})}/>
                     </Field>
                   )}
                 </Fields>
               </Section>
               <Field label="Show Score">
                 <Checkbox 
-                  checked={global.config.showScore} 
-                  onChange={checked => globalMethods.setKeyValue("showScore", checked)}
+                  checked={state.config.showScore} 
+                  onChange={checked =>  updateState(d => {d.config.showScore = checked})}
                 />
               </Field>
             </Fields>

@@ -1,24 +1,21 @@
-@import "../global";
 
-$colorBox: #ff4d4d;
-$colorText: #fff; 
 
 .Logo {
   width: 150px;
   display: block;
 
   path {
-    fill: $colorText; 
+    fill: #fff; 
   }
   rect {
-    fill: $colorBox;
+    fill: #ff4d4d;
   }
 
   &:hover rect {
-    fill: darken($colorBox, 5%);
+    fill: darken(#ff4d4d, 5%);
   }
 
   &:hover path {
-    fill: darken($colorText, 5%);
+    fill: darken(#fff, 5%);
   }
 }
