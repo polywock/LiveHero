@@ -67,7 +67,6 @@ export class Manager {
     this.channels = this.config.channels.map((c, i) => new Channel(i, this))
     this.base.handleWon = idx => {
       this.channels[idx].lastHitTime = new Date().getTime()
-      this.channels[idx].lastMissTime = new Date().getTime()
     }
 
     this.base.handleMiss = (idx: number) => {

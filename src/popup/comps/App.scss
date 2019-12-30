@@ -3,6 +3,25 @@
   box-sizing: border-box;
 }
 
+#root {
+  & > .header {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    margin-bottom: 20px;
+
+    & > a > .github {
+      opacity: 0.5;
+      color: white;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
 body {
   margin: 0;
   padding: 15px;

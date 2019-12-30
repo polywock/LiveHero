@@ -36,6 +36,7 @@
     "immer": "^5.1.0",
     "node-sass": "^4.12.0",
     "react-color": "^2.17.3",
+    "react-icons": "^3.8.0",
     "regenerator-runtime": "^0.13.2",
     "sass-loader": "^7.1.0",
     "set-value": "^3.0.1",

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Logo } from "./Logo"
+import { FaGithubSquare } from "react-icons/fa"
 
 import { AppStateContext } from "../AppStateContext"
 import { DEFAULT_APP_STATE, DEFAULT_CONFIG } from "../defaults"
@@ -47,8 +48,12 @@ export const App = (props: AppProps) => {
   } 
   return (
     <AppStateContext.Provider value={{state, updateState}}>
-      <Logo/>
-      <br/>
+      <div className="header">
+        <Logo/>
+        <a target="_blank" href="https://github.com/polywock/LiveHero">
+          <FaGithubSquare size={30} className="github"/>
+        </a>
+      </div>
       <MainButtons/>
       <br/>
       <Presets/>
