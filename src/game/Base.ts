@@ -1,6 +1,6 @@
 import { Config } from "../popup/types"
 import * as helper from "../helper"
-import { Sample } from "../Listener"
+import { Sample, ListenerEvent, ListenerStates } from "../Listener"
 
 export const CONSTANTS = {
   CLEAR_DELAY: 1,
@@ -27,6 +27,7 @@ export class Note {
         if (!this.fulfilledTail) {
           this.fulfilledTail = true 
           this.basic.changeScore(CONSTANTS.SCORE_TAIL)
+          this.basic.tailHitCount++
         }
       }
     }
@@ -38,6 +39,7 @@ export class Note {
         this.fulfilledHead = true 
         this.basic.changeScore(CONSTANTS.SCORE_HEAD)
         this.basic.handleWon(this.index)
+        this.basic.headHitCount++ 
       }
     }
   }
@@ -56,6 +58,7 @@ export class Note {
 
 
 export class Base {
+  listenerState: ListenerStates
   notes: Note[] = []
   score: number = 0
   scoreSentiment: -1 | 0 | 1 = 0
@@ -63,10 +66,15 @@ export class Base {
   delayTime: number
   handleMiss: (idx: number) => any
   paused = false 
+  ended = false 
   handleUnfulfilled: (index: number) => any
   handleWon: (index: number) => any
   lastNoteTime = -Infinity
   lastNoteResolved = false 
+  headMissCount = 0 
+  headHitCount = 0
+  tailMissCount = 0 
+  tailHitCount = 0
   constructor(public config: Config) {
 
   }
@@ -132,6 +140,33 @@ export class Base {
       return 
     }
   }
+  handleListenerEvent(event: ListenerEvent) {
+    if (event.type === "STATE") {
+      this.listenerState = event.value
+      if (event.value === "ENDED") {
+        // If ended, set flag.
+        this.ended = true 
+      } else if ((event.value === "PLAYING" || event.value === "PAUSED") && this.ended) {
+        // if ended flag set, and playing/paused clear score.
+        this.ended = false 
+        this.score = 0
+        this.scoreSentiment = 0
+        this.scoreSentiment = 0
+        this.headHitCount = 0
+        this.headMissCount = 0
+        this.tailHitCount = 0
+        this.tailMissCount = 0
+      }
+
+      // If no video, clear score. 
+      if (event.value === "NO VIDEO") {
+        this.score = 0
+        this.scoreSentiment = 0
+      }
+    } else if (event.type === "NEW_SAMPLE") {
+      this.handleNewSample(event)
+    }
+  }
   changeScore(delta: number) {
     this.score += delta 
     this.scoreSentiment = delta < 0 ? -1 : delta === 0 ? 0 : 1 
@@ -153,10 +188,12 @@ export class Base {
         var flag = false 
         if (!note.fulfilledHead) {
           this.changeScore(-CONSTANTS.SCORE_HEAD)
+          this.headMissCount++
           flag = true 
         } 
         if (note.endedAt && !note.fulfilledTail) {
           this.changeScore(-CONSTANTS.SCORE_TAIL)
+          this.tailMissCount++
           flag = true
         }
 

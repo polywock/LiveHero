@@ -33,6 +33,10 @@ body {
   user-select: none;
 }
 
+button {
+  cursor: pointer;
+}
+
 button, input[type="text"] {
   font-family: inherit;
   font-size: inherit; 

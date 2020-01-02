@@ -28,7 +28,7 @@ export const Channel = (props: ChannelProps) => {
           onClick={() => props.onRemove()}
         >x</button>
         <KeyPicker value={props._key} onChange={props.onKeyChange}/>
-        <ColorPicker value={props.color} onChange={props.onColorChange}/>
+        <ColorPicker disableAlpha={true} value={props.color} onChange={props.onColorChange}/>
     </div>
   )
 }

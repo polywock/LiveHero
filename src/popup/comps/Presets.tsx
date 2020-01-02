@@ -42,7 +42,9 @@ export const Presets = (props: PresetsProps) => {
         <Select options={[
           {value: "EASY", name: "Easy"}, 
           {value: "NORMAL", name: "Normal"}, 
-          {value: "HARD", name: "Hard"}
+          {value: "HARD", name: "Hard"},
+          {value: "EXTRA HARD", name: "Extra Hard"},
+          {value: "INSANITY", name: "Insanity"}
         ]} value={diffOverride || "CUSTOM"} onChange={(newValue) => {
           updateState(d => {
             let override = DIFF[newValue as keyof typeof DIFF]

@@ -1,6 +1,4 @@
 # todo 
-1. Add appearance presets and screenshots to chrome/firefox page. 
-2. Explore webworkers for better performance. 
-2. refactor game. 
-
-
+1. Add appearance/theme presets.  
+1. Add some kind of video-end event. 
+1. Make the game more obvious. 

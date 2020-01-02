@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from "react"
+import React, { useState } from "react"
 import { ChromePicker } from "react-color"
 import "./ColorPicker.scss"
+import { rgbaToHex } from "../../helper"
 
 type ColorPickerProps = {
   value: string,
-  onChange: (newValue: string) => any
+  onChange: (newValue: string) => any,
+  disableAlpha?: boolean
 }
 
 export const ColorPicker = (props: ColorPickerProps) => {
@@ -35,7 +37,13 @@ export const ColorPicker = (props: ColorPickerProps) => {
       {open && (
         <div className="bg" onClick={handleBgClick}>
           <div className="fg" onClick={e => e.stopPropagation()}>
-            <ChromePicker disableAlpha={true} color={props.value} onChange={(e: any) => props.onChange(e.hex)}/>
+            <ChromePicker disableAlpha={props.disableAlpha} color={props.value} onChange={(e: any) => {
+              if (props.disableAlpha) {
+                props.onChange(e.hex)
+              } else {
+                props.onChange(rgbaToHex(e.rgb))
+              }
+            }}/>
             <div tabIndex={0} onFocus={() => setOpen(false)}></div>
           </div>
         </div>

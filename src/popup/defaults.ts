@@ -5,7 +5,7 @@ export const DEFAULT_APP_STATE: AppState = {
 }
 
 export const DEFAULT_CONFIG: Config = {
-  version: 10,
+  version: 11,
   clarityThreshold: 0.4,
   volumeThreshold: 0.04,
   delayLength: 1000, 
@@ -34,19 +34,22 @@ export const DEFAULT_CONFIG: Config = {
   hitFeedbackDuration: 150,
   hitFeedbackCurve: "LINEAR",
   hitFeedbackColor: "#ffffff",
+  hitFeedbackOpacity: 0.5,
   missFeedback: "OFF",
   missFeedbackDuration: 150,
-  missFeedbackCurve: "LINEAR",
+  missFeedbackCurve: "EASE_OUT_QUAD",
   missFeedbackColor: "#ff6868",
+  missFeedbackOpacity: 0.6,
   pressFeedback: "NOTE",
   pressFeedbackDuration: 150,
   pressFeedbackCurve: "STEP",
   pressFeedbackColor: "#0000ff",
+  pressFeedbackOpacity: 1,
   fulfillFeedback: "FIXED",
   fulfillColor: "#ffff00",
   lineColor: "#787878",
   lineWidth: 1,
-  backgroundColor: "#000000",
+  backgroundColor: "#000000e0",
   windowFocusColor: "#7a00ff"
 }
 
@@ -81,6 +84,26 @@ export const DIFF = {
     noteDelay: 200,
     allowMerging: true,
     allowDualNotes: false,
+  },
+  "EXTRA HARD": {
+    delayLength: 800, 
+    noteLength: 80, 
+    hitWindowLength: 80 * 1.25, 
+    gutterLength: 80 * 1.25,
+    sampleDelay: 100,
+    noteDelay: 200,
+    allowMerging: true,
+    allowDualNotes: true,
+  },
+  "INSANITY": {
+    delayLength: 600, 
+    noteLength: 60, 
+    hitWindowLength: 60 * 1.25, 
+    gutterLength: 80 * 1.25,
+    sampleDelay: 100,
+    noteDelay: 150,
+    allowMerging: true,
+    allowDualNotes: true,
   }
 }
 

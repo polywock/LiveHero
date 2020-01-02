@@ -12,13 +12,13 @@ export const Section = (props: SectionProps) => {
   return (
     <div className="Section">
       <div className="wrapper" style={{marginBottom: expanded ? "15px" : "0px"}}>
-        <span onKeyUp={e => {
+        <button onKeyUp={e => {
           if (e.key === "Enter") {
             e.preventDefault()
             e.stopPropagation()
             setExpanded(!expanded)
           }
-        }} tabIndex={0} className="control" onClick={e => setExpanded(!expanded)}>{expanded ? "-" : "+"}</span>
+        }} className="control" onClick={e => setExpanded(!expanded)}>{expanded ? "-" : "+"}</button>
         <span className="label">{props.label}</span>
       </div>
       {expanded && props.children}

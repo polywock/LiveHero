@@ -5,7 +5,7 @@ import { FaGithubSquare } from "react-icons/fa"
 import { AppStateContext } from "../AppStateContext"
 import { DEFAULT_APP_STATE, DEFAULT_CONFIG } from "../defaults"
 
-import { getConfig, hasPermissions } from "../../browserHelper"
+import { getConfigOrDefault, hasPermissions } from "../../browserUtils"
 import { Options } from "./Options"
 import { Presets } from "./Presets"
 import { MainButtons } from "./MainButtons"
@@ -29,7 +29,7 @@ export const App = (props: AppProps) => {
     })
 
     // Get config from storage. 
-    getConfig().then(config => {
+    getConfigOrDefault().then(config => {
       // if we update our config API, do not consider older versions.
       if (config.version === DEFAULT_CONFIG.version) {
         updateState(d => {
@@ -38,7 +38,8 @@ export const App = (props: AppProps) => {
       } else {
         updateState(d => { d.config = produce(DEFAULT_CONFIG, d => {}) })
       }
-    }, err => {
+    }, () => {
+      // some type of Error. 
       updateState(d => { d.config = produce(DEFAULT_CONFIG, d => {}) })
     })
   }, [])

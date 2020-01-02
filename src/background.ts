@@ -1,13 +1,14 @@
-import { getActiveTab } from "./browserHelper"
+import { getActiveTab } from "./browserUtils"
 import "regenerator-runtime"
 
 chrome.runtime.onConnect.addListener(async port => {
   const tab = await getActiveTab()
   port.onMessage.addListener(msg => {
-    if (msg.type === "NEW_SAMPLE") {
+
+    if (msg.type === "LISTENER_EVENT_FROM_FRAME_CS") {
       chrome.tabs.sendMessage(tab.id, {
-        type: "PIPE_SAMPLE",
-        data: msg.data
+        type: "LISTENER_EVENT_FROM_BACKGROUND",
+        event: msg.event 
       })
     }
   })

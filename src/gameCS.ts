@@ -1,7 +1,6 @@
 
 import { Manager } from "./game/Mgr"
-import { Config } from "./popup/config"
-import { getConfig } from "./browserHelper"
+import { getConfigOrDefault } from "./browserUtils"
 import { browser } from "webextension-polyfill-ts";
 import "regenerator-runtime/runtime"
 
@@ -10,12 +9,11 @@ import "regenerator-runtime/runtime"
 
 function main() {
   var mgr: Manager
-  var config: Config
 
 
   async function toggleOn() {
     if (mgr) { return }
-    mgr = new Manager(await getConfig())
+    mgr = new Manager(await getConfigOrDefault())
   }
 
   function toggleOff() {
@@ -30,8 +28,8 @@ function main() {
       toggleOn()
     } else if (msg.type === "TOGGLE_OFF") {
       toggleOff()
-    } else if (msg.type === "PIPE_SAMPLE") {
-      mgr && mgr.base.handleNewSample(msg.data)
+    } else if (msg.type === "LISTENER_EVENT_FROM_BACKGROUND") {
+      mgr?.base.handleListenerEvent?.(msg.event)
     }
   })
 }

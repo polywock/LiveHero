@@ -1,8 +1,9 @@
 import { Curve, DynamicColor, Config, AppState } from "./types"
 import { invertHex } from "../helper"
 import { DIFF, KEYS, THEMES } from "./defaults"
-import { getActiveTab, pushConfig } from "../browserHelper"
+import { getActiveTab, pushConfig } from "../browserUtils"
 import { browser } from "webextension-polyfill-ts"
+
 
 export function getAdjustedNormal(normal: number, curve: Curve) {
 	if (curve === "LINEAR") {

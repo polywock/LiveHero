@@ -166,7 +166,36 @@ export class Manager {
       this.ctx.textBaseline = "top"
       this.ctx.fillText(this.base.score.toString(), 15, 15)
     }
+    if (true) {
+      this.ctx.fillStyle = this.config.textColor
+      this.ctx.font = "15px 'IBM Plex Mono'"
+      this.ctx.textAlign = "right"
+      this.ctx.textBaseline = "top"
+      if (this.base.listenerState !== "PLAYING") {
+        this.ctx.fillText("NO SIGNAL", this.canvas.width - 15, 15)
+      } 
+    }
+
     this.drawNotes()
+    if (this.base.notes.length === 0 && this.base.listenerState === "ENDED") {
+      this.ctx.fillStyle = this.config.textColor
+      this.ctx.font = "25px 'IBM Plex Mono'"
+      this.ctx.textAlign = "left"
+      this.ctx.textBaseline = "top"
+
+      let totalHits = this.base.headHitCount + this.base.tailHitCount
+      let totalMisses = this.base.headMissCount + this.base.tailMissCount
+      let accuracy = helper.round(totalHits / (totalHits + totalMisses) * 100, 2)
+      this.ctx.fillText(`hits:     ${totalHits}`, 50, 100)
+      this.ctx.fillText(`misses:   ${totalMisses}`, 50, 100 + 40)
+      this.ctx.fillText(`accuracy: ${accuracy}%`, 50, 100 + 80)
+      this.ctx.fillText(`score:    ${this.base.score}`, 50, 100 + 120)
+    }
+
+
+  
+
+
 
     // Pause layer 
     if (this.base.paused) {
@@ -308,7 +337,7 @@ class Channel {
       const color = getDynamicColor(this.mgr.config.channels[this.index].color, this.mgr.config.pressFeedbackColor, pressFb)
       const adjustedNormal = getAdjustedNormal(pressFbNormal, curve)
       const opacityNormal = helper.clamp(0, 1, 1 - adjustedNormal)
-      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal* 255)}`
+      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal * this.mgr.config.pressFeedbackOpacity * 255)}`
       ctx.fillRect(startX, startY, cached.channelSize, cached.noteHeight * 1.2)
     }
 
@@ -320,7 +349,7 @@ class Channel {
       const color = getDynamicColor(this.mgr.config.channels[this.index].color, this.mgr.config.hitFeedbackColor, hitFb)
       const adjustedNormal = getAdjustedNormal(hitFbNormal, curve)
       const opacityNormal = helper.clamp(0, 1, 1 - adjustedNormal)
-      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal* 255)}`
+      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal * this.mgr.config.hitFeedbackOpacity * 255)}`
       ctx.fillRect(startX, 0, cached.channelSize, this.mgr.wrapperDiv.height)
     }
 
@@ -332,7 +361,7 @@ class Channel {
       const color = getDynamicColor(this.mgr.config.channels[this.index].color, this.mgr.config.missFeedbackColor, missFb)
       const adjustedNormal = getAdjustedNormal(missFbNormal, curve)
       const opacityNormal = helper.clamp(0, 1, 1 - adjustedNormal)
-      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal* 255)}`
+      ctx.fillStyle = `${color}${helper.numToHex(opacityNormal * this.mgr.config.missFeedbackOpacity * 255)}`
       ctx.fillRect(startX, 0, cached.channelSize, this.mgr.wrapperDiv.height)
     }
   }

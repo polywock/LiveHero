@@ -1,6 +1,5 @@
 
 const chromatic = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-import {  Curve } from "./popup/config"
 
 export function freqToLinear(freq: number) {
   return Math.log2(freq / 440)
@@ -79,6 +78,13 @@ type RGB = {
 	b: number
 }
 
+type RGBA = {
+	r: number,
+	g: number,
+	b: number,
+	a: number 
+}
+
 export function numToHex(num: number) {
 	var s = Math.round(num).toString(16)
 	if (s.length === 1) {
@@ -114,6 +120,18 @@ export function rgbToHex(color: RGB): string {
 		numToHex(color.g)
 	}${
 		numToHex(color.b)
+	}`
+}
+
+export function rgbaToHex(color: RGBA): string {
+	return `#${
+		numToHex(color.r)
+	}${
+		numToHex(color.g)
+	}${
+		numToHex(color.b)
+	}${
+		numToHex(clamp(0, 255, Math.round(color.a * 255)))
 	}`
 }
 

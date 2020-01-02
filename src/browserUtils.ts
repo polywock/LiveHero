@@ -1,14 +1,15 @@
 import { browser } from "webextension-polyfill-ts"
 import { Config } from "./popup/types"
+import { DEFAULT_CONFIG } from "./popup/defaults"
 
 export function pushConfig(newConfig: Config) {
   browser.storage.local.set({config: JSON.stringify(newConfig)})
 }
 
-export async function getConfig(): Promise<Config> {
+export async function getConfigOrDefault(): Promise<Config> {
   const { config } = await browser.storage.local.get("config")
   if (!config) {
-    throw Error("No config.")
+    return JSON.parse(JSON.stringify(DEFAULT_CONFIG))
   }
   return JSON.parse(config)
 }

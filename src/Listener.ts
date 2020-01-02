@@ -1,14 +1,11 @@
 import { getMaxAmp } from "./helper"
-import { Config } from "./popup/config"
+import { Config } from "./popup/types"
 import { findPitch } from "pitchy"
 
 declare global {
   interface Window {
     lastCtx: AudioContext,
-    lastMedia: {
-      source: MediaElementAudioSourceNode,
-      elem: HTMLMediaElement
-    }
+    srcNodes: MediaElementAudioSourceNode[]
   }
 }
 
@@ -19,81 +16,85 @@ export type Sample = {
   time: number
 }
 
+export type ListenerStates = "NO VIDEO" | "PAUSED" | "PLAYING" | "ENDED"
+
+export type ListenerEvent = {
+  type: "STATE",
+  value: ListenerStates,
+  first: boolean
+} | ({
+  type: "NEW_SAMPLE",
+} & Sample)
+
 export class Listener {
   lastSampleTime = -Infinity
+  lastStateEventTime = -Infinity
+  lastState: ListenerStates;
+  STATE_POLL_RATE = 200
+  DOM_POLL_RATE = 500 
   handleNewSample: (sample: Sample) => void 
+  handleEvent?: (event: ListenerEvent) => void 
   ctx: AudioContext
-  mediaSource: MediaElementAudioSourceNode
-  mediaElem: HTMLMediaElement
+  mediaSrc: MediaElementAudioSourceNode
   delayNode: DelayNode
   analyserNode: AnalyserNode
   isSuspended = false 
   domPollInterval: number 
-  fftSize = 2048 
-  data = new Float32Array(this.fftSize)
+  FFT_SIZE = 2048 
+  data = new Float32Array(this.FFT_SIZE)
 
   constructor(public config: Config) {
     this.ctx = window.lastCtx || new AudioContext()
     window.lastCtx = this.ctx 
     this.analyserNode = this.ctx.createAnalyser()
-    this.analyserNode.fftSize = this.fftSize
+    this.analyserNode.fftSize = this.FFT_SIZE
     this.delayNode = this.ctx.createDelay(10)
     this.delayNode.delayTime.value = this.config.delayLength / 1000
 
     this.domPoll()
-    this.domPollInterval = setInterval(this.domPoll, 500)
+    this.domPollInterval = setInterval(this.domPoll, this.DOM_POLL_RATE)
 
     this.tick()
   }
 
-  // connects "elem" to audio graph. 
   connect = (domElem: HTMLMediaElement) => {
-    if (this.mediaSource) {
-      if (this.mediaElem !== domElem) {
+    if (this.mediaSrc) {
+      if (this.mediaSrc.mediaElement !== domElem) {
         this.disconnect()
-      }
-    } else {
-      if (window.lastMedia && window.lastMedia.elem === domElem) {
-        this.mediaElem = window.lastMedia.elem
-        this.mediaSource = window.lastMedia.source
       } else {
-        this.mediaSource = this.ctx.createMediaElementSource(domElem)
-        this.mediaElem = domElem
+        return // already connected.  
       }
-
-      window.lastMedia = {
-        elem: this.mediaElem,
-        source: this.mediaSource
-      }
-
-      // this.mediaSource = (window.lastMediaSource && window.lastMediaElem === domElem) ? window.lastMediaSource : this.ctx.createMediaElementSource(domElem)
-      this.delayNode.disconnect()
-      this.mediaSource.disconnect()
-      this.mediaSource.connect(this.analyserNode)
-      this.mediaSource.connect(this.delayNode)
-      this.delayNode.connect(this.ctx.destination)
     }
+
+    this.mediaSrc = window.srcNodes.find(v => v.mediaElement === domElem)
+    if (!this.mediaSrc) {
+      this.mediaSrc = this.ctx.createMediaElementSource(domElem)
+      window.srcNodes.push(this.mediaSrc)
+    }
+
+    this.delayNode.disconnect()
+    this.mediaSrc.disconnect()
+    this.mediaSrc.connect(this.analyserNode)
+    this.mediaSrc.connect(this.delayNode)
+    this.delayNode.connect(this.ctx.destination)
+    this.lastState = null
   }
 
-  // disconnects "elem" to audio graph. 
   disconnect() {
-    if (!this.mediaSource) return 
-
-    this.mediaSource.disconnect(this.delayNode)
-    this.mediaSource.disconnect(this.analyserNode)
-    this.mediaSource.connect(this.ctx.destination)
-    this.mediaSource = undefined
-    this.mediaElem = undefined
+    this.mediaSrc?.disconnect(this.delayNode)
+    this.mediaSrc?.disconnect(this.analyserNode)
+    this.mediaSrc?.connect(this.ctx.destination)
+    this.mediaSrc = undefined
+    this.lastState = null
   }
 
   domPoll = () => {
     if (this.isSuspended) { return }
-
     var domElem = document.getElementsByTagName("video")[0] || document.getElementsByTagName("audio")[0]
 
     if (domElem) {
       this.connect(domElem)
-      } else {
+    } else {
       this.disconnect()
     }
   }
@@ -108,23 +109,50 @@ export class Listener {
     if (this.isSuspended) {
       return 
     }
-
-    const elem = this.mediaElem
-
-    if (this.handleNewSample && elem) {
-      if (!elem.paused  && elem.currentTime > 0 && !elem.ended) {
-        if (new Date().getTime() - this.lastSampleTime > this.config.sampleDelay) {
-          const sample = this.generateSample() 
-          sample && this.handleNewSample && this.handleNewSample(sample)
-        }
-      }
-    } 
-
     requestAnimationFrame(this.tick)
+
+    if (!this.mediaSrc) {
+      return 
+    }
+
+    const elem = this.mediaSrc?.mediaElement
+    this.tickReportState()
+
+    if (!elem.paused && elem.currentTime > 0 && !elem.ended) {
+      if (new Date().getTime() - this.lastSampleTime > this.config.sampleDelay) {
+        const sample = this.generateSample() 
+        sample && this.handleNewSample?.(sample)
+        this.handleEvent?.({type: "NEW_SAMPLE", ...sample})
+      }
+    }
   }
 
-  generateSample = () => {
+  tickReportState = () => {
+    const elem = this.mediaSrc?.mediaElement
 
+    const now = new Date().getTime()
+    if (now - this.lastStateEventTime > this.STATE_POLL_RATE) {
+      this.lastStateEventTime = now
+
+      if (!elem) {
+        this.handleEvent?.({type: "STATE", value: "NO VIDEO", first: this.lastState === "ENDED"})
+        this.lastState = "NO VIDEO"
+        return 
+      }
+      if (elem.ended) {
+        this.handleEvent?.({type: "STATE", value: "ENDED", first: this.lastState === "ENDED"})
+        this.lastState = "ENDED"
+      } else if (elem.paused) {
+        this.handleEvent?.({type: "STATE", value: "PAUSED", first: this.lastState === "ENDED"})
+        this.lastState = "PAUSED"
+      } else {
+        this.handleEvent?.({type: "STATE", value: "PLAYING", first: this.lastState === "ENDED"})
+        this.lastState = "PLAYING"
+      }
+    }
+  }
+  
+  generateSample = () => {
     this.analyserNode.getFloatTimeDomainData(this.data)
     var [frequency, clarity] = findPitch(this.data, this.ctx.sampleRate)
     this.lastSampleTime = new Date().getTime() 

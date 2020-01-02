@@ -1,4 +1,2 @@
 
 declare module 'pitchy';
-
-

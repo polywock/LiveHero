@@ -9,8 +9,8 @@ import { Section } from "./Section"
 import { Channels } from "./Channels"
 import { Fields } from "./Fields"
 import { Select } from "./Select";
-import { isFirefox } from "../../helper";
-import { requestPermissions, removePermissions, hasPermissions } from "../../browserHelper"
+import { isFirefox, clamp } from "../../helper";
+import { requestPermissions, removePermissions, hasPermissions } from "../../browserUtils"
 import { AppStateContext } from "../AppStateContext"
 
 import "./Options.scss"
@@ -206,9 +206,17 @@ export const Options = (props: OptionsProps) => {
                   </Field>
                   {state.config.pressFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={state.config.pressFeedbackColor} onChange={color => updateState(d => {d.config.pressFeedbackColor = color})}/>
+                      <ColorPicker disableAlpha={true} value={state.config.pressFeedbackColor} onChange={color => updateState(d => {d.config.pressFeedbackColor = color})}/>
                     </Field>
                   )}
+                  <Field label="Opacity">
+                    <NumericInput 
+                      value={state.config.pressFeedbackOpacity} 
+                      setValue={newValue =>  updateState(d => {d.config.pressFeedbackOpacity = clamp(0, 1, newValue)})}
+                      step={0.1}
+                      displayRound={2}
+                    /> 
+                  </Field>
                   {state.config.pressFeedback !== "OFF" && (
                     <>
                       <Field label="Duration">
@@ -241,9 +249,17 @@ export const Options = (props: OptionsProps) => {
                   </Field>
                   {state.config.hitFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={state.config.hitFeedbackColor} onChange={color => updateState(d => {d.config.hitFeedbackColor = color})}/>
+                      <ColorPicker disableAlpha={true} value={state.config.hitFeedbackColor} onChange={color => updateState(d => {d.config.hitFeedbackColor = color})}/>
                     </Field>
                   )}
+                  <Field label="Opacity">
+                    <NumericInput 
+                      value={state.config.hitFeedbackOpacity} 
+                      setValue={newValue =>  updateState(d => {d.config.hitFeedbackOpacity = clamp(0, 1, newValue)})}
+                      step={0.1}
+                      displayRound={2}
+                    /> 
+                  </Field>
                   {state.config.hitFeedback !== "OFF" && (
                     <>
                       <Field label="Duration">
@@ -276,9 +292,17 @@ export const Options = (props: OptionsProps) => {
                   </Field>
                   {state.config.missFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={state.config.missFeedbackColor} onChange={color =>  updateState(d => {d.config.missFeedbackColor = color})}/>
+                      <ColorPicker disableAlpha={true}  value={state.config.missFeedbackColor} onChange={color =>  updateState(d => {d.config.missFeedbackColor = color})}/>
                     </Field>
                   )}
+                  <Field label="Opacity">
+                    <NumericInput 
+                      value={state.config.missFeedbackOpacity} 
+                      setValue={newValue =>  updateState(d => {d.config.missFeedbackOpacity = clamp(0, 1, newValue)})}
+                      step={0.1}
+                      displayRound={2}
+                    /> 
+                  </Field>
                   {state.config.missFeedback !== "OFF" && (
                     <>
                       <Field label="Duration">
@@ -311,7 +335,7 @@ export const Options = (props: OptionsProps) => {
                   </Field>
                   {state.config.fulfillFeedback === "FIXED" && (
                     <Field label="Color">
-                      <ColorPicker value={state.config.fulfillColor} onChange={color =>  updateState(d => {d.config.fulfillColor = color})}/>
+                      <ColorPicker disableAlpha={true} value={state.config.fulfillColor} onChange={color =>  updateState(d => {d.config.fulfillColor = color})}/>
                     </Field>
                   )}
                 </Fields>

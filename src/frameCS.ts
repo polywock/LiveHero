@@ -1,6 +1,6 @@
 
 import { Listener} from "./Listener"
-import { getConfig } from "./browserHelper"
+import { getConfigOrDefault } from "./browserUtils"
 import { browser } from  "webextension-polyfill-ts"
 import "regenerator-runtime/runtime"
 
@@ -8,6 +8,7 @@ import "regenerator-runtime/runtime"
 
 function main() {
   var listener: Listener = undefined
+  window.srcNodes = []
 
   async function toggleOn() {
     if (listener) {
@@ -15,13 +16,13 @@ function main() {
     }
 
     const port = browser.runtime.connect()
-    const config = await getConfig()
+    const config = await getConfigOrDefault()
     listener = new Listener(config)
 
-    listener.handleNewSample = (sample: any) => {
+    listener.handleEvent = event => {
       port.postMessage({
-        type: "NEW_SAMPLE",
-        data: sample
+        type: "LISTENER_EVENT_FROM_FRAME_CS",
+        event
       })
     }
   }
