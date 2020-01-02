@@ -35,7 +35,7 @@ export const DEFAULT_CONFIG: Config = {
   hitFeedbackCurve: "LINEAR",
   hitFeedbackColor: "#ffffff",
   hitFeedbackOpacity: 0.5,
-  missFeedback: "OFF",
+  missFeedback: "FIXED",
   missFeedbackDuration: 150,
   missFeedbackCurve: "EASE_OUT_QUAD",
   missFeedbackColor: "#ff6868",
