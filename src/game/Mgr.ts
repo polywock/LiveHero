@@ -32,6 +32,7 @@ export class Manager {
   public base: Base
   public stopped = false
   public channels: Channel[]
+  public showHelp = true
 
   constructor(public config: Config) {
     this.base = new Base(this.config)
@@ -154,6 +155,46 @@ export class Manager {
     this.ctx.clearRect(0, 0, 10000, 10000)
     this.ctx.fillStyle = this.config.backgroundColor
     this.ctx.fillRect(0, 0, 10000, 10000)
+
+
+    // show help 
+    if (this.base.notes.length > 0) {
+      this.showHelp = false
+    }
+    if (this.showHelp) {
+      let offsetY = 15
+      let offsetX = 15
+      this.ctx.fillStyle = this.config.textColor
+      this.ctx.textAlign = "left"
+      this.ctx.textBaseline = "top"
+
+      let helpTips = [
+        "tip: window is moveable (drag).",
+        "tip: window is scalable (drag edges).",
+        "tip: chrome and edge require extra permissions to listen to embedded videos.",
+        "    1. enable the permissions in the Live Hero control menu.",
+        "    2. refresh tab.",
+        "tip: if video is playing and window still says no-signal.",
+        "    1: try to refresh tab.",
+        "    2: in the control menu, reset options to default.",
+        "tip: this window needs to be focused to listen to keypresses.",
+        "    - click the window to focus (purple outline).",
+        "",
+        "Load some music and start playing."
+      ]
+
+      this.ctx.font = "15px 'IBM Plex Mono'"
+      this.ctx.fillText("HELP", offsetX, offsetY)
+      offsetY += 15 * 2
+      
+      for (let i = 0; i < helpTips.length; i++) {
+        this.ctx.font = "12px 'IBM Plex Mono'"
+        this.ctx.fillText(helpTips[i], offsetX, offsetY)
+        offsetY += 12 * 1.5
+      }
+
+      return 
+    }
     
     this.channels.forEach(channel => {
       channel.draw()
@@ -161,20 +202,20 @@ export class Manager {
 
     if (this.config.showScore) {
       this.ctx.fillStyle = this.config.textColor
-      this.ctx.font = "30px 'IBM Plex Mono'"
+      this.ctx.font = "25px 'IBM Plex Mono'"
       this.ctx.textAlign = "left"
       this.ctx.textBaseline = "top"
-      this.ctx.fillText(this.base.score.toString(), 15, 15)
+      this.ctx.fillText(this.base.score.toString(), 20, 20)
     }
-    if (true) {
-      this.ctx.fillStyle = this.config.textColor
-      this.ctx.font = "15px 'IBM Plex Mono'"
-      this.ctx.textAlign = "right"
-      this.ctx.textBaseline = "top"
-      if (this.base.listenerState !== "PLAYING") {
-        this.ctx.fillText("NO SIGNAL", this.canvas.width - 15, 15)
-      } 
-    }
+
+    // Show no signal indicator. 
+    this.ctx.fillStyle = this.config.textColor
+    this.ctx.font = "15px 'IBM Plex Mono'"
+    this.ctx.textAlign = "right"
+    this.ctx.textBaseline = "top"
+    if (this.base.listenerState !== "PLAYING") {
+      this.ctx.fillText("NO SIGNAL", this.canvas.width - 15, 15)
+    } 
 
     this.drawNotes()
     if (this.base.notes.length === 0 && this.base.listenerState === "ENDED") {
@@ -191,6 +232,7 @@ export class Manager {
       this.ctx.fillText(`accuracy: ${accuracy}%`, 50, 100 + 80)
       this.ctx.fillText(`score:    ${this.base.score}`, 50, 100 + 120)
     }
+    
 
 
   
