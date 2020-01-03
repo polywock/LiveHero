@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo, useCallback } from "react"
 import { Logo } from "./Logo"
 import { FaGithubSquare } from "react-icons/fa"
 
 import { AppStateContext } from "../AppStateContext"
 import { DEFAULT_APP_STATE, DEFAULT_CONFIG } from "../defaults"
 
-import { getConfigOrDefault, hasPermissions } from "../../browserUtils"
+import { getConfigOrDefault, hasPermissions, pushConfig } from "../../browserUtils"
 import { Options } from "./Options"
 import { Presets } from "./Presets"
 import { MainButtons } from "./MainButtons"
@@ -18,6 +18,12 @@ type AppProps = {}
 export const App = (props: AppProps) => {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [state, updateState] = useImmer(DEFAULT_APP_STATE)
+
+  useEffect(() => {
+    if (state.config) {
+      pushConfig(state.config)
+    }
+  }, [state.config])
 
   useEffect(() => {
 

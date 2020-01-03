@@ -24,8 +24,6 @@ export type Config = {
   blockAllKeys: boolean,
   showScore: boolean,
   textColor: string,
-  textColorPositive: string,
-  textColorNegative: string,
   missFeedback: DynamicColor,
   missFeedbackDuration: number,
   missFeedbackCurve: Curve,

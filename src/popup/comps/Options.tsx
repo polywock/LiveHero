@@ -178,18 +178,8 @@ export const Options = (props: OptionsProps) => {
                   displayRound={0}
                 /> 
               </Field>
-            </Fields>
-          </Section>
-          <Section label="Text Color" initialState={false}>
-            <Fields>
-              <Field label="Neutral">
+              <Field label="Text Color">
                 <ColorPicker value={state.config.textColor} onChange={color => updateState(d => {d.config.textColor = color})}/>
-              </Field>
-              <Field label="Positive">
-                <ColorPicker value={state.config.textColorPositive} onChange={color => updateState(d => {d.config.textColorPositive = color})}/>
-              </Field>
-              <Field label="Negative">
-                <ColorPicker value={state.config.textColorNegative} onChange={color => updateState(d => {d.config.textColorNegative = color})}/>
               </Field>
             </Fields>
           </Section>

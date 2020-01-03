@@ -28,8 +28,6 @@ export const DEFAULT_CONFIG: Config = {
   blockAllKeys: true,
   showScore: true,
   textColor: "#ffffff",
-  textColorPositive: "#afffaf",
-  textColorNegative: "#ffafaf",
   hitFeedback: "OFF",
   hitFeedbackDuration: 150,
   hitFeedbackCurve: "LINEAR",

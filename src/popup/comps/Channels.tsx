@@ -12,6 +12,7 @@ export const Channels = (props: {}) => {
     <div className="Channels">
       {state.config.channels.map((channel, i) => (
         <Channel 
+          key={i}
           _key={channel.key} 
           onKeyChange={newKey => {
             updateState(d => {

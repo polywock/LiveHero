@@ -52,7 +52,7 @@ export const Select = (props: SelectProps) => {
         }}>
           <div className="fg">
             {extOptions.map((option, i) => (
-              <SelectOption autofocus={i === 0 && true} name={option.name} value={option.value} onSelect={value => {
+              <SelectOption key={i} autofocus={i === 0 && true} name={option.name} value={option.value} onSelect={value => {
                 props.onChange(value)
                 setOpen(false)
               }}/> 

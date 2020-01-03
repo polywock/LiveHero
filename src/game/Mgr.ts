@@ -160,7 +160,7 @@ export class Manager {
     })
 
     if (this.config.showScore) {
-      this.ctx.fillStyle = this.base.scoreSentiment === 0 ? this.config.textColor : this.base.scoreSentiment === -1 ? this.config.textColorNegative : this.config.textColorPositive
+      this.ctx.fillStyle = this.config.textColor
       this.ctx.font = "30px 'IBM Plex Mono'"
       this.ctx.textAlign = "left"
       this.ctx.textBaseline = "top"

@@ -20,8 +20,7 @@ export type ListenerStates = "NO VIDEO" | "PAUSED" | "PLAYING" | "ENDED"
 
 export type ListenerEvent = {
   type: "STATE",
-  value: ListenerStates,
-  first: boolean
+  value: ListenerStates
 } | ({
   type: "NEW_SAMPLE",
 } & Sample)
@@ -29,7 +28,6 @@ export type ListenerEvent = {
 export class Listener {
   lastSampleTime = -Infinity
   lastStateEventTime = -Infinity
-  lastState: ListenerStates;
   STATE_POLL_RATE = 200
   DOM_POLL_RATE = 500 
   handleNewSample: (sample: Sample) => void 
@@ -77,7 +75,6 @@ export class Listener {
     this.mediaSrc.connect(this.analyserNode)
     this.mediaSrc.connect(this.delayNode)
     this.delayNode.connect(this.ctx.destination)
-    this.lastState = null
   }
 
   disconnect() {
@@ -85,7 +82,6 @@ export class Listener {
     this.mediaSrc?.disconnect(this.analyserNode)
     this.mediaSrc?.connect(this.ctx.destination)
     this.mediaSrc = undefined
-    this.lastState = null
   }
 
   domPoll = () => {
@@ -135,19 +131,15 @@ export class Listener {
       this.lastStateEventTime = now
 
       if (!elem) {
-        this.handleEvent?.({type: "STATE", value: "NO VIDEO", first: this.lastState === "ENDED"})
-        this.lastState = "NO VIDEO"
+        this.handleEvent?.({type: "STATE", value: "NO VIDEO"})
         return 
       }
       if (elem.ended) {
-        this.handleEvent?.({type: "STATE", value: "ENDED", first: this.lastState === "ENDED"})
-        this.lastState = "ENDED"
+        this.handleEvent?.({type: "STATE", value: "ENDED"})
       } else if (elem.paused) {
-        this.handleEvent?.({type: "STATE", value: "PAUSED", first: this.lastState === "ENDED"})
-        this.lastState = "PAUSED"
+        this.handleEvent?.({type: "STATE", value: "PAUSED"})
       } else {
-        this.handleEvent?.({type: "STATE", value: "PLAYING", first: this.lastState === "ENDED"})
-        this.lastState = "PLAYING"
+        this.handleEvent?.({type: "STATE", value: "PLAYING"})
       }
     }
   }
