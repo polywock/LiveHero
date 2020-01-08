@@ -169,18 +169,17 @@ export class Manager {
       this.ctx.textBaseline = "top"
 
       let helpTips = [
-        "tip: window is moveable (drag).",
-        "tip: window is scalable (drag edges).",
-        "tip: chrome and edge require extra permissions to listen to embedded videos.",
-        "    1. enable the permissions in the Live Hero control menu.",
-        "    2. refresh tab.",
-        "tip: if video is playing and window still says no-signal.",
-        "    1: try to refresh tab.",
-        "    2: in the control menu, reset options to default.",
-        "tip: this window needs to be focused to listen to keypresses.",
-        "    - click the window to focus (purple outline).",
+        "- window moveable by dragging.",
+        "- window scalable by dragging edges.",
+        "- for embedded videos, chromium requires extra permissions",
+        "   1: enable the permissions in the Live Hero control menu.",
+        "   2: refresh tab.",
+        "- if video is playing and window still says no-signal.",
+        "   1: try to refresh tab.",
+        "   2: in the control menu, reset options to default.",
+        "- this window needs to be focused (purple outline) to listen to keypresses.",
         "",
-        "Load some music and start playing."
+        "NO SIGNAL: Load your favorite song on Youtube and start playing."
       ]
 
       this.ctx.font = "15px 'IBM Plex Mono'"
