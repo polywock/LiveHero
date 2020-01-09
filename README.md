@@ -5,7 +5,7 @@ Chrome and Firefox extension that injects a rhythm game to HTML videos including
 ### Video of it available [here](https://streamable.com/m1qrd). 
 
 # Instructions 
-1. Install the [Chrome](https://chrome.google.com/webstore/detail/live-hero/ghjkdokfbcfehdfpconfebbmbclelmlj) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/live-hero) extension. 
+1. Install the [Chrome](https://chrome.google.com/webstore/detail/live-hero/ghjkdokfbcfehdfpconfebbmbclelmlj), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/live-hero), or [Edge](https://microsoftedge.microsoft.com/addons/detail/ehgmfaolklbakgddpmdhbpnpbphehmie) extension. 
 2. Find some music videos on Youtube. 
 3. Click on the Live Hero icon and inject the game. 
 <img src="https://github.com/polywock/LiveHero/blob/master/assets/sc1.jpg?raw=true" width="400">
