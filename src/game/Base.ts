@@ -75,6 +75,7 @@ export class Base {
   headHitCount = 0
   tailMissCount = 0 
   tailHitCount = 0
+  missPressCount = 0
   constructor(public config: Config) {
 
   }
@@ -219,6 +220,7 @@ export class Base {
     })
     if (missed) {
       this.changeScore(-5)
+      this.missPressCount++
       this.handleMiss && this.handleMiss(channel)
     }
   }

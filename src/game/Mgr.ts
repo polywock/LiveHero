@@ -175,8 +175,9 @@ export class Manager {
         "   1: enable the permissions in the Live Hero control menu.",
         "   2: refresh tab.",
         "- if video is playing and window still says no-signal.",
-        "   1: try to refresh tab.",
-        "   2: in the control menu, reset options to default.",
+        "   1: in the control menu, reset options to default.",
+        "   2: listen on low volumes? lower the volume threshold.",
+        "   3: try refreshing the tab.",
         "- this window needs to be focused (purple outline) to listen to keypresses.",
         "",
         "NO SIGNAL: Load your favorite song on Youtube and start playing."
@@ -224,7 +225,7 @@ export class Manager {
       this.ctx.textBaseline = "top"
 
       let totalHits = this.base.headHitCount + this.base.tailHitCount
-      let totalMisses = this.base.headMissCount + this.base.tailMissCount
+      let totalMisses = this.base.headMissCount + this.base.tailMissCount + this.base.missPressCount
       let accuracy = helper.round(totalHits / (totalHits + totalMisses) * 100, 2)
       this.ctx.fillText(`hits:     ${totalHits}`, 50, 100)
       this.ctx.fillText(`misses:   ${totalMisses}`, 50, 100 + 40)
