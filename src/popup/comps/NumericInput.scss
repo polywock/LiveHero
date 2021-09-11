@@ -1,0 +1,12 @@
+
+
+.NumericInput {
+  display: grid;
+  grid-template-columns: 35px calc(100% - 70px - 10px) 35px; 
+  grid-column-gap: 5px;
+  align-items: center;
+
+  .value {
+    text-align: center;
+  }
+}

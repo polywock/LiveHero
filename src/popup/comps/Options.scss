@@ -1,0 +1,9 @@
+
+.Options {
+  display: grid;
+  grid-row-gap: 20px;
+
+  & .Field > .label {
+    font-size: 0.9em;
+  }
+}

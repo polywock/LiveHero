@@ -1,0 +1,59 @@
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  & > .header {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    margin-bottom: 20px;
+
+    & > a > .github {
+      opacity: 0.5;
+      color: white;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+body {
+  margin: 0;
+  padding: 15px;
+  background-color: #262938; 
+  color: #eee; 
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  width: 400px;
+  user-select: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button, input[type="text"] {
+  font-family: inherit;
+  font-size: inherit; 
+  padding: 3px 10px; 
+  background-color: #3D4456; 
+  color: #eee;
+  border: none; 
+
+  &:focus {
+    outline: 1px solid #ff6; 
+  }
+
+  &:active {
+    background-color: darken(#3D4456, 10%); 
+  }
+}
+
+
+
+

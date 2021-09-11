@@ -1,0 +1,12 @@
+
+.Channel {
+  display: grid; 
+  grid-template-columns: max-content 1fr 50px;
+  align-items: center;
+  grid-column-gap: 10px;
+
+  & > button:first-child {
+    cursor: pointer;
+    padding: 3px 6px;
+  }
+}

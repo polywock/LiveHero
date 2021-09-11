@@ -1,0 +1,54 @@
+
+
+.Select {
+  background-color: #3D4456;
+  display: grid; 
+  grid-template-columns: calc(100% - 10px) 10px;
+  align-items: center;
+  padding: 5px;
+  padding-right: 10px;
+  user-select: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: 1px solid #ff6;
+  }
+
+  & > .value {
+    text-align: center;
+  }
+
+  & > .Triangle {
+    polygon {
+      fill: white;
+      opacity: 0.75;
+    }
+  }
+
+  & > .bg {
+    width: 100vw; 
+    height: 100vh; 
+    position: fixed; 
+    left: 0;
+    top: 0;
+    display: grid; 
+    background-color: #000000dd;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    & > .fg {
+      text-align: center; 
+      width: 200px;
+
+      & > .SelectOption {
+        padding: 5px; 
+        background-color: #3D4456; 
+
+        &:focus {
+          outline: 1px solid #ff6;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+
+
+.Logo {
+  width: 150px;
+  display: block;
+
+  path {
+    fill: #fff; 
+  }
+  rect {
+    fill: #ff4d4d;
+  }
+
+  &:hover rect {
+    fill: darken(#ff4d4d, 5%);
+  }
+
+  &:hover path {
+    fill: darken(#fff, 5%);
+  }
+}
