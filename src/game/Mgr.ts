@@ -74,6 +74,14 @@ export class Manager {
       this.channels[idx].lastMissTime = new Date().getTime()
     }
 
+    this.wrapperDiv.div.addEventListener("pointerdown", e => {
+      if (e.button === 2) {
+        chrome.runtime.sendMessage({type: "REQUEST_TOGGLE_OFF"})
+        e.stopPropagation()
+        e.preventDefault()
+      }
+    })
+
     this.wrapperDiv.div.addEventListener("keydown", e => {
       if (e.code === this.config.pauseKey || e.code === this.config.exitKey) {e.stopPropagation(); e.preventDefault()}
       if (this.config.blockAllKeys) {
