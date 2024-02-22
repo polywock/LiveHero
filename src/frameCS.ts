@@ -2,8 +2,6 @@
 import { Listener} from "./Listener"
 import { getConfigOrDefault } from "./browserUtils"
 
-
-
 function main() {
   var listener: Listener = undefined
   window.srcNodes = []
@@ -13,13 +11,11 @@ function main() {
       return 
     }
 
-    const port = chrome.runtime.connect()
     const config = await getConfigOrDefault()
-    console.log("CONFIG: ", config)
     listener = new Listener(config)
 
     listener.handleEvent = event => {
-      port.postMessage({
+      chrome.runtime.sendMessage({
         type: "LISTENER_EVENT_FROM_FRAME_CS",
         event
       })

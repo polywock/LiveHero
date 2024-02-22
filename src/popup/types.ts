@@ -1,3 +1,10 @@
+declare global {
+  interface GlobalVar {
+      tabId: number 
+  }
+  var gvar: GlobalVar
+}
+
 
 export type AppState = {
   config?: Config 

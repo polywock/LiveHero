@@ -1,6 +1,7 @@
 
 const { resolve } = require("path")
 const { env } = require("process")
+const webpack = require("webpack")
 
 const common = {
   entry: {
@@ -20,26 +21,30 @@ const common = {
         use: "babel-loader"
       },
       {
-        test: /\.scss$/,
+        test: /\.css$/,
+        exclude: /node_modules/,
+        resourceQuery: { not: [/raw/] },
         use: [
-          "style-loader", 
-          {
-            loader: "css-loader",
-            options: {
-              url: false,
-              importLoaders: 1
-            }
-          },
-          "postcss-loader"
-        ]
-      }
+            "style-loader", 
+            {
+              loader: "css-loader",
+              options: {
+                import: true,
+              }
+            },
+            "postcss-loader"
+        ],
+      },
     ]
   },
   resolve: {
     extensions: [ '.ts', '.js', '.tsx']
   },
-  // devtool: 'inline-source-map'
-  devtool: false
+  plugins: [
+    new webpack.ProvidePlugin({
+      gvar: [resolve(__dirname, "src", "globalVar.ts"), "gvar"]
+    })
+  ]
 }
 
 if (env.NODE_ENV === "production") {

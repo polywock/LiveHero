@@ -1,17 +1,17 @@
 {
   "name": "Live Hero",
-  "version": "2.8",
+  "version": "3.0",
   "description": "Rhythm game that attaches to videos.",
-  "manifest_version": 2,
-  "browser_action": {
+  "manifest_version": 3,
+  "action": {
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["background.js"],
-    "persist": true
+    "service_worker": "background.js",
+    "type": "module"
   },
-  "permissions": ["activeTab", "storage"],
-  "optional_permissions": ["<all_urls>"],
+  "permissions": ["activeTab", "storage", "scripting"],
+  "optional_host_permissions": ["<all_urls>"],
   "icons": { 
     "128": "logo128.png"
   }

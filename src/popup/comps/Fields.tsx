@@ -1,5 +1,5 @@
 import React from "react"
-import "./Fields.scss"
+import "./Fields.css"
 
 type FieldsProps = {
   children: React.ReactElement[] | React.ReactElement 

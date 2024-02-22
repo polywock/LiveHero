@@ -25,7 +25,7 @@ export class ScalableDiv {
   public handleDimChange: () => void 
   constructor(public x: number, public y: number, public width: number, public height: number, public minWidth: number, public minHeight: number, public hotZone: number) {
     this.div = document.createElement("div")
-    this.div.addEventListener("mousedown", e => {
+    this.div.addEventListener("pointerdown", e => {
       if (e.offsetX < this.hotZone) {
         this.transforming.push(TransformModes.X_LEFT) 
       } else if (this.width - e.offsetX < this.hotZone) {
@@ -47,12 +47,12 @@ export class ScalableDiv {
 
     })
 
-    window.addEventListener("mouseup", e => {
+    window.addEventListener("pointerup", e => {
       this.refDims = null
       this.transforming = []
     })
 
-    window.addEventListener("mousemove", e => {
+    window.addEventListener("pointermove", e => {
       if (this.transforming.length > 0) {
         this.updateTransforming(e.x, e.y)
       } 

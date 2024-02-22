@@ -1,6 +1,6 @@
 
 import React from "react"
-import "./Field.scss"
+import "./Field.css"
 
 
 type FieldProps = {

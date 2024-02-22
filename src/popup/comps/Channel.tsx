@@ -1,4 +1,4 @@
-import "./Channel.scss"
+import "./Channel.css"
 
 import { ColorPicker } from "./ColorPicker"
 import { KeyPicker } from "./KeyPicker"

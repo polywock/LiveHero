@@ -1,7 +1,7 @@
 import { Curve, DynamicColor, Config, AppState } from "./types"
 import { invertHex } from "../helper"
 import { DIFF, KEYS, THEMES } from "./defaults"
-import { executeScript, getActiveTab, pushConfig } from "../browserUtils"
+import { pushConfig } from "../browserUtils"
 
 
 export function getAdjustedNormal(normal: number, curve: Curve) {
@@ -81,39 +81,33 @@ export function hasKeyOverride(config: Config, overrideName: keyof typeof KEYS) 
   return true 
 }
 
-export function callInject(state: AppState) {
+export async function callInject(state: AppState) {
   pushConfig(state.config)
-  activate()
-}
 
-export function callRemove(state: AppState) {
-  pushConfig(state.config)
-  getActiveTab().then(tab => {
-    chrome.tabs.sendMessage(tab.id, {
-      type: "TOGGLE_OFF"
+  await chrome.scripting.executeScript({
+    target: {tabId: gvar.tabId, allFrames: true},
+    files: ["frameCS.js"]
+  })
+
+  await chrome.scripting.executeScript({
+    target: {tabId: gvar.tabId},
+    files: ["gameCS.js"]
+  })
+
+
+  chrome.tabs.sendMessage(gvar.tabId, {
+    type: "TOGGLE_OFF"
+  }, () => {
+    chrome.tabs.sendMessage(gvar.tabId, {
+      type: "TOGGLE_ON"
     })
   })
 }
 
+export function callRemove(state: AppState) {
+  pushConfig(state.config)
 
-async function activate() {
-  await Promise.all([
-    executeScript({
-      allFrames: true,
-      file: "frameCS.js"
-    }),
-    executeScript({
-      allFrames: false,
-      file: "gameCS.js"
-    })
-  ])
-
-  const activeTab = await getActiveTab()
-  chrome.tabs.sendMessage(activeTab.id, {
+  chrome.tabs.sendMessage(gvar.tabId, {
     type: "TOGGLE_OFF"
-  }, () => {
-    chrome.tabs.sendMessage(activeTab.id, {
-      type: "TOGGLE_ON"
-    })
   })
 }

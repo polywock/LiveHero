@@ -1,7 +1,7 @@
 
 import React from "react"
 import { Channel } from "./Channel"
-import "./Channels.scss"
+import "./Channels.css"
 import { AppStateContext } from "../AppStateContext"
 import { THEMES, KEYS } from "../defaults"
 

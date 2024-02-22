@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Triangle } from "./Triangle"
-import "./Select.scss"
+import "./Select.css"
 
 
 type SelectProps = {

@@ -2,7 +2,6 @@
 import { Manager } from "./game/Mgr"
 import { getConfigOrDefault } from "./browserUtils"
 
-
 function main() {
   var mgr: Manager
 

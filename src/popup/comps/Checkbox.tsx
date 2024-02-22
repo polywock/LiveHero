@@ -1,5 +1,5 @@
 
-import "./Checkbox.scss"
+import "./Checkbox.css"
 
 type CheckboxProps = {
   checked: boolean,

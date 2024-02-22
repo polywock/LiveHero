@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { ChromePicker } from "react-color"
-import "./ColorPicker.scss"
+import "./ColorPicker.css"
 import { rgbaToHex } from "../../helper"
 
 type ColorPickerProps = {

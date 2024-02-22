@@ -3,8 +3,8 @@ import React from "react"
 import { AppStateContext } from "../AppStateContext"
 import { callInject, callRemove } from "../utils"
 import { DEFAULT_CONFIG } from "../defaults"
-import produce from "immer"
-import "./MainButtons.scss"
+import { produce } from "immer"
+import "./MainButtons.css"
 
 type MainButtonsProps = {}
 

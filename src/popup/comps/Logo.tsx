@@ -1,5 +1,5 @@
 
-import "./Logo.scss"
+import "./Logo.css"
 
 export const Logo = () => (
   <svg className="Logo" viewBox="0 0 262.92 67.28">

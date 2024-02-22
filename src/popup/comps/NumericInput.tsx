@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react"
-import "./NumericInput.scss"
+import "./NumericInput.css"
 import { round } from "../../helper"
 
 type NumericInputProps = {

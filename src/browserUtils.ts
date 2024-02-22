@@ -1,30 +1,14 @@
 import { Config } from "./popup/types"
 import { DEFAULT_CONFIG } from "./popup/defaults"
 
-export function executeScript(details: chrome.tabs.InjectDetails): Promise<any[]> {
-  return new Promise((res, rej) => {
-    chrome.tabs.executeScript(details, result => {
-      if (chrome.runtime.lastError) {
-        return rej(chrome.runtime.lastError)
-      }
-      res(result)
-    })
-  })
-}
+
 
 export function pushConfig(newConfig: Config) {
-  chrome.storage.local.set({config: JSON.stringify(newConfig)})
+  chrome.storage.local.set({config: newConfig})
 }
 
 export async function getConfigOrDefault(): Promise<Config> {
-  return new Promise((res, rej) => {
-    chrome.storage.local.get("config", ({ config }) => {
-      if (!config) {
-        config = JSON.parse(JSON.stringify(DEFAULT_CONFIG))
-      }
-      res(JSON.parse(config))
-    })
-  })
+  return (await chrome.storage.local.get("config"))["config"] ?? structuredClone(DEFAULT_CONFIG)
 }
 
 export function queryTabs(queryInfo: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {

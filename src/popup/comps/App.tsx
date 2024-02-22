@@ -10,8 +10,8 @@ import { Options } from "./Options"
 import { Presets } from "./Presets"
 import { MainButtons } from "./MainButtons"
 import { useImmer } from "use-immer"
-import "./App.scss"
-import produce from "immer"
+import { produce } from "immer"
+import "./App.css"
 
 type AppProps = {}
 

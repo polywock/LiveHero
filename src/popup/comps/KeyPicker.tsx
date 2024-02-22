@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import "./KeyPicker.scss"
+import "./KeyPicker.css"
 
 type KeyPickerProps = {
   onChange: (key: string) => void

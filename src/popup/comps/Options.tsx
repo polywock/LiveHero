@@ -13,7 +13,7 @@ import { isFirefox, clamp } from "../../helper";
 import { requestPermissions, removePermissions, hasPermissions } from "../../browserUtils"
 import { AppStateContext } from "../AppStateContext"
 
-import "./Options.scss"
+import "./Options.css"
 
 const showPermissionCheckbox = !isFirefox()
 
